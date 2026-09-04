@@ -1362,6 +1362,38 @@ describeBrowser('Experimental keyboard authoring in the real Scratch editor', ()
         await screenshot(`cleanup-anchored-${scale}`);
     }, 90000);
 
+    test.each([true, false])('Clean-up+ shortcut works without selection from blank Code (keyboard %s)', async keyboard => {
+        await driver.executeScript(`const SB=window.ScratchBlocks,ws=window.__keyboardTestWorkspace;
+            SB.Xml.domToWorkspace(SB.Xml.textToDom('<xml><block type="event_whenflagclicked" id="empty-clean-a" x="280" y="240"/>'+
+            '<block type="event_whenkeypressed" id="empty-clean-b" x="520" y="420"/></xml>'),ws);`);
+        if (keyboard) await beginNewScript();
+        else {
+            await chord(Key.ALT, 'k');
+            const point = await driver.executeScript(`const r=window.__keyboardTestWorkspace.getParentSvg().getBoundingClientRect();
+                return {x:Math.round(r.right-220),y:Math.round(r.bottom-210)};`);
+            await driver.actions().move({origin:'viewport',...point}).click().perform();
+        }
+        await painted(); await painted();
+        expect(await driver.executeScript('return !!window.ScratchBlocks.selected;')).toBe(false);
+        const positions = () => driver.executeScript(`return window.__keyboardTestWorkspace.getTopBlocks(false)
+            .map(b=>({id:b.id,...b.getRelativeToSurfaceXY()})).sort((a,b)=>a.id.localeCompare(b.id));`);
+        const before = await positions();
+        await driver.actions().keyDown(Key.ALT).keyDown(Key.SHIFT).sendKeys('c')
+            .keyUp(Key.SHIFT).keyUp(Key.ALT).perform();
+        await driver.wait(async () => JSON.stringify(await positions()) !== JSON.stringify(before), 10000);
+        await painted();
+        const after = await positions();
+        await chord(Key.CONTROL, 'z');
+        expect(await positions()).toEqual(before);
+        await chord(Key.CONTROL, 'y');
+        expect(await positions()).toEqual(after);
+        // Finder owns text keys and must not trigger another layout.
+        await chord(Key.CONTROL, 'f');
+        await driver.actions().keyDown(Key.ALT).keyDown(Key.SHIFT).sendKeys('c')
+            .keyUp(Key.SHIFT).keyUp(Key.ALT).perform();
+        expect(await positions()).toEqual(after);
+    }, 60000);
+
     test('Clean-up+ context menu preserves the active script in mouse mode', async () => {
         await driver.executeScript(`const SB=window.ScratchBlocks,ws=window.__keyboardTestWorkspace;
             SB.Xml.domToWorkspace(SB.Xml.textToDom('<xml><block type="event_whenflagclicked" id="menu-head" x="250" y="200"/>'+

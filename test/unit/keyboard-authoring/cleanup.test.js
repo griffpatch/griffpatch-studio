@@ -1,6 +1,47 @@
+import {JSDOM} from 'jsdom';
 import {cleanUpAtScript, isCleanUpShortcut} from '../../../src/experiments/keyboard-authoring/cleanup';
 import DevTools from '../../../src/addons/addons/editor-devtools/DevTools';
 import {captureScriptViewportAnchor} from '../../../src/addons/libraries/common/cs/script-viewport-anchor';
+import {ownsMouseCleanup} from '../../../src/addons/libraries/common/cs/cleanup-shortcut';
+
+test('cleanup without a block delegates anchor choice to the addon', () => {
+    const workspace = {cleanUpPlusLayout: jest.fn(() => true)};
+    expect(cleanUpAtScript(workspace, null)).toBe(true);
+    expect(workspace.cleanUpPlusLayout).toHaveBeenCalledWith(undefined);
+});
+
+test('no-script layout preserves the canvas origin against changing content bounds', () => {
+    let matrix = {e: 250, f: 200};
+    const workspace = {getCanvas: () => ({getScreenCTM: () => matrix}), resizeContents: jest.fn(),
+        getMetrics: () => ({viewLeft: 40, viewTop: 60, contentLeft: -500, contentTop: -400}),
+        scrollbar: {set: jest.fn()}};
+    const restore = captureScriptViewportAnchor(workspace, null);
+    matrix = {e: 90, f: 110};
+    restore();
+    expect(workspace.scrollbar.set).toHaveBeenCalledWith(380, 370);
+});
+
+test('mouse cleanup belongs only to the visible workspace and yields to text, keyboard editor and dialogs', () => {
+    const {document} = new JSDOM('<!doctype html><body></body>').window;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    document.body.appendChild(svg);
+    svg.getClientRects = () => [{}];
+    const workspace = {getParentSvg: () => svg};
+    expect(ownsMouseCleanup({target: svg}, workspace, null)).toBe(true);
+    expect(ownsMouseCleanup({target: document.body}, workspace, workspace)).toBe(true);
+    expect(ownsMouseCleanup({target: document.body}, workspace, null)).toBe(false);
+    const input = document.createElement('input');
+    expect(ownsMouseCleanup({target: input}, workspace, workspace)).toBe(false);
+    const surface = document.createElement('div');
+    surface.setAttribute('aria-label', 'Scratch keyboard editor');
+    expect(ownsMouseCleanup({target: surface}, workspace, workspace)).toBe(false);
+    const dialog = document.createElement('div');
+    dialog.setAttribute('role', 'dialog');
+    dialog.getClientRects = () => [{}];
+    document.body.appendChild(dialog);
+    expect(ownsMouseCleanup({target: document.body}, workspace, workspace)).toBe(false);
+    dialog.remove(); svg.remove();
+});
 
 test('cleanup compensates screen displacement against the new scroll bounds', () => {
     let matrix = {e: 250, f: 200};

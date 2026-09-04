@@ -1155,7 +1155,7 @@ const attachKeyboardAuthoring = ({workspace, ScratchBlocks, vm, session, isVisib
             preview.clear();
             const cleaned = cleanUpAtScript(workspace, block);
             announce(cleaned ? 'Clean-up+: layout arranged, current script kept in place.' :
-                'Select a script and enable Clean-up+ in Addons first.');
+                'Enable Clean-up+ in Addons first.');
             return;
         }
         const ownsKey = ['surface', 'composer', 'native'].includes(owner);

@@ -4,6 +4,7 @@ import UndoGroup from "./UndoGroup.js";
 import {getScriptContext} from "../../libraries/common/cs/script-context.js";
 import {captureScriptViewportAnchor} from "../../libraries/common/cs/script-viewport-anchor.js";
 import {createLayoutTransaction} from "../../libraries/common/cs/layout-transaction.js";
+import {isCleanUpShortcut, ownsMouseCleanup} from "../../libraries/common/cs/cleanup-shortcut.js";
 
 export default class DevTools {
   constructor(addon, msg, m) {
@@ -652,6 +653,16 @@ export default class DevTools {
   }
 
   eventKeyDown(e) {
+    if (isCleanUpShortcut(e)) {
+      const workspace = this.getWorkspace();
+      if (!this.addon.self?.disabled && ownsMouseCleanup(e, workspace, this.cleanupPointerWorkspace) &&
+          this.addon.settings.get("enableCleanUpPlus") && !workspace.isDragging()) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!e.repeat) workspace.cleanUpPlusLayout();
+        return;
+      }
+    }
     const switchCostume = (up) => {
       // todo: select previous costume
       let selected = this.costTabBody.querySelector("div[class*='sprite-selector-item_is-selected']");
@@ -744,6 +755,8 @@ export default class DevTools {
   }
 
   eventMouseDown(e) {
+    const workspace = this.getWorkspace();
+    this.cleanupPointerWorkspace = workspace?.getParentSvg()?.contains(e.target) ? workspace : null;
     this.updateMousePosition(e);
   }
 

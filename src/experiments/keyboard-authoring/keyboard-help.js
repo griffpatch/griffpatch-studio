@@ -31,7 +31,7 @@ const sections = [
         ['Delete / Backspace', 'Remove the selected block. Delete leaves an insertion where it was; Backspace moves to the previous eligible position. Backspace on if/else offers the simpler if when safe.'],
         ['Shift+Up / Down', 'Extend a selection through neighbouring statements. Shift+Home / End extends to a chain boundary.'],
         ['Alt+Up / Down', 'Move the selected statement or range one position.'],
-        ['Alt+Shift+C', 'Clean-up+ layout: arrange this sprite’s scripts while keeping the focused script in the same screen position. Select a script first; no blocks or variables are deleted.'],
+        ['Alt+Shift+C', 'Clean-up+ layout: arrange this sprite’s scripts. Works from the code workspace in mouse or keyboard mode, even without a selection. Keeps the active script (or the viewport) in place; no blocks or variables are deleted.'],
         ['Ctrl+C / X / V / D', 'Copy, cut, paste at the caret, or duplicate blocks. Use Cmd on Mac.'],
         ['Ctrl+Z / Ctrl+Shift+Z', 'Undo / redo with the editor’s native history. Text fields keep their own text editing shortcuts.']
     ]],
