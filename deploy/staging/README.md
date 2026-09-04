@@ -5,7 +5,9 @@ No custom-domain route, Worker request handler, database, analytics binding or
 paid caching product is configured. Workers observability is disabled.
 
 Build using the repository README (including modified Blocks), then copy
-`deploy/staging/_headers` and `deploy/staging/robots.txt` into `build/`.
+`deploy/staging/_headers`, `deploy/staging/_redirects` and
+`deploy/staging/robots.txt` into `build/`. The explicit root redirect keeps
+the editor at `/editor.html` without rewriting missing JS requests into HTML.
 Run pinned Wrangler 4.122.0 with `CLOUDFLARE_ACCOUNT_ID` set to the intended account:
 
 ```powershell
