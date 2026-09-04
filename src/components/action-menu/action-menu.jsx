@@ -105,6 +105,7 @@ class ActionMenu extends React.Component {
             img: mainImg,
             title: mainTitle,
             moreButtons,
+            studioTarget,
             tooltipPlace,
             onClick
         } = this.props;
@@ -123,6 +124,7 @@ class ActionMenu extends React.Component {
                     aria-label={mainTitle}
                     className={classNames(styles.button, styles.mainButton)}
                     data-for={this.mainTooltipId}
+                    data-studio-target={studioTarget}
                     data-tip={mainTitle}
                     ref={this.setButtonRef}
                     onClick={this.clickDelayer(onClick)}
@@ -142,7 +144,8 @@ class ActionMenu extends React.Component {
                 <div className={styles.moreButtonsOuter}>
                     <div className={styles.moreButtons}>
                         {(moreButtons || []).map(({img, title, onClick: handleClick,
-                            fileAccept, fileChange, fileInput, fileMultiple}, keyId) => {
+                            fileAccept, fileChange, fileInput, fileMultiple,
+                            studioTarget: itemStudioTarget}, keyId) => {
                             const isComingSoon = !handleClick;
                             const hasFileInput = fileInput;
                             const tooltipId = `${this.mainTooltipId}-${title}`;
@@ -154,6 +157,7 @@ class ActionMenu extends React.Component {
                                             [styles.comingSoon]: isComingSoon
                                         })}
                                         data-for={tooltipId}
+                                        data-studio-target={itemStudioTarget}
                                         data-tip={title}
                                         onClick={hasFileInput ? handleClick : this.clickDelayer(handleClick)}
                                     >
@@ -166,6 +170,8 @@ class ActionMenu extends React.Component {
                                             <input
                                                 accept={fileAccept}
                                                 className={styles.fileInput}
+                                                data-studio-target={itemStudioTarget ?
+                                                    `${itemStudioTarget}-input` : null}
                                                 multiple={fileMultiple}
                                                 ref={fileInput}
                                                 type="file"
@@ -200,9 +206,11 @@ ActionMenu.propTypes = {
         fileAccept: PropTypes.string, // Optional, only for file upload
         fileChange: PropTypes.func, // Optional, only for file upload
         fileInput: PropTypes.func, // Optional, only for file upload
-        fileMultiple: PropTypes.bool // Optional, only for file upload
+        fileMultiple: PropTypes.bool, // Optional, only for file upload
+        studioTarget: PropTypes.string
     })),
     onClick: PropTypes.func.isRequired,
+    studioTarget: PropTypes.string,
     title: PropTypes.node.isRequired,
     tooltipPlace: PropTypes.string
 };

@@ -45,6 +45,31 @@
 .inactive {
     opacity: 0;
 }
+.studio-brand {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.5rem;
+    margin-inline: 0.5rem 0.25rem;
+    padding: 0.2rem;
+    border-radius: 0.35rem;
+    color: inherit;
+    text-decoration: none;
+}
+.studio-brand:hover { background: $ui-black-transparent; }
+.studio-brand:focus-visible { outline: 2px solid currentColor; outline-offset: 1px; }
+.studio-brand img {
+    width: 30px;
+    height: 30px;
+    /* Match the mark's rounded square without changing its layout or artwork. */
+    border-radius: 25%;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.65);
+}
+.studio-wordmark { font-size: 0.8rem; line-height: 1.2; white-space: nowrap; }
+.studio-channel { display: block; font-size: 0.65rem; font-weight: normal; opacity: 0.85; }
+@media only screen and (max-width: 1124px) {
+    .studio-wordmark { display: none; }
+}
 .scratch-logo {
     height:  1.6rem;
     vertical-align: middle;
@@ -98,17 +123,6 @@
 .menu-bar-menu {
     margin-top: $menu-bar-height;
     z-index: $z-index-menu-bar;
-}
-
-.feedback-link {
-    color: $menu-bar-background;
-    text-decoration: none;
-}
-
-.feedback-button {
-    background-color: white;
-    color: inherit;
-    height: 34px;
 }
 
 .divider {

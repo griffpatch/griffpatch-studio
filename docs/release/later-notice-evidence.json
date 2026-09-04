@@ -1,0 +1,78 @@
+{
+  "scope": "Later upstream notice evidence, not historical package notices or release clearance",
+  "checked": "2026-09-04",
+  "entries": [
+    {
+      "name": "linebreak",
+      "version": "0.3.0",
+      "declaredLicense": "MIT",
+      "packageManifestSha256": "4106d81693434a8aaf0f9bebba065f3aa5aa50883a06bae3da5a5d1ea7f52dce",
+      "status": "Supplementary later upstream notice; applicability to installed old version still requires review",
+      "notice": {
+        "url": "https://raw.githubusercontent.com/devongovett/linebreaker/dc9603e8e58ce0e6d431cc5087ffb98132cc6a07/LICENSE",
+        "revision": "dc9603e8e58ce0e6d431cc5087ffb98132cc6a07",
+        "text": "MIT License\n\nCopyright (c) 2014-present Devon Govett\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+        "sha256": "cf22b8198f0886a8d4626121579114f23141070e1fceab02ab3c1c361e163440"
+      },
+      "introduced": {
+        "revision": "c7873ab973ca11576c50e49803b1fecbe531ed96",
+        "date": "2019-11-17T18:47:49Z",
+        "message": "Create LICENSE"
+      }
+    },
+    {
+      "name": "unicode-trie",
+      "version": "0.3.1",
+      "declaredLicense": "MIT",
+      "packageManifestSha256": "747e5ba3f918891b30c01e9f0589846860187949905d00bdea2c2dbd1f179c97",
+      "status": "Supplementary later upstream notice; applicability to installed old version still requires review",
+      "notice": {
+        "url": "https://raw.githubusercontent.com/devongovett/unicode-trie/916656f45abab135face2b53ee5e32488cc9b47f/LICENSE",
+        "revision": "916656f45abab135face2b53ee5e32488cc9b47f",
+        "text": "Copyright 2018\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n",
+        "sha256": "43439dbd4f43837aadab215cdbe5a422cc6323a50c4ea84d8d6bbc3671666a1d"
+      },
+      "introduced": {
+        "revision": "8ab9b14025ff7c26c2aec1bbd1e71d5f83eb3bd1",
+        "date": "2018-08-09T23:47:07Z",
+        "message": "Create LICENSE file"
+      }
+    },
+    {
+      "name": "is-in-browser",
+      "version": "1.1.3",
+      "declaredLicense": "MIT",
+      "packageManifestSha256": "7adaf2a9fda4dadf2f4d0aeef75affa99421fcba5a1fc9e93370471587e22934",
+      "status": "Supplementary later upstream notice; applicability to installed old version still requires review",
+      "notice": {
+        "url": "https://raw.githubusercontent.com/tuxsudo/is-in-browser/aa6cbcaaeb65dc5321415e79700482e3eccafcf0/LICENSE",
+        "revision": "aa6cbcaaeb65dc5321415e79700482e3eccafcf0",
+        "text": "MIT License\n\nCopyright (c) 2016-2019 Jared Anderson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+        "sha256": "fe78d30fe8703b6a43f60b8cb87d534d71b07ff28fecdb5d3b3a481340d7988e"
+      },
+      "introduced": {
+        "revision": "56378377a3767c5822313a6aac846e9b10abb6ed",
+        "date": "2019-03-13T23:47:55Z",
+        "message": "Add license\n\nAdd MIT license, per `package.json`."
+      }
+    },
+    {
+      "name": "redux-throttle",
+      "version": "0.1.1",
+      "declaredLicense": "MIT",
+      "packageManifestSha256": "1123e6414411eeda2ee221007da34f41957ff8003b70dcc94a79c3e799ed7cd8",
+      "status": "Supplementary later upstream notice; applicability to installed old version still requires review",
+      "notice": {
+        "url": "https://raw.githubusercontent.com/mathieudutour/redux-throttle/33109c8f6278feb0cb50b30ad19f72cdf1ffb3f3/LICENSE",
+        "revision": "33109c8f6278feb0cb50b30ad19f72cdf1ffb3f3",
+        "text": "MIT License\n\nCopyright (c) 2020 Mathieu Dutour\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+        "sha256": "ea278b3f006775c9556e79f32d867bfaf1b3f6326c7c23286d86ebb599d8b154"
+      },
+      "introduced": {
+        "revision": "33109c8f6278feb0cb50b30ad19f72cdf1ffb3f3",
+        "date": "2020-07-06T07:06:45Z",
+        "message": "Create LICENSE"
+      }
+    }
+  ]
+}

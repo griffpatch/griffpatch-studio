@@ -4,7 +4,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {indexForPositionOnList} from './drag-utils';
 
-const SortableHOC = function (WrappedComponent) {
+const createSortableWrapper = function (WrappedComponent) {
     class SortableWrapper extends React.Component {
         constructor (props) {
             super(props);
@@ -18,6 +18,7 @@ const SortableHOC = function (WrappedComponent) {
             this.boxes = null;
             this.ref = null;
             this.containerBox = null;
+            this.pendingDrop = null;
         }
 
         componentWillReceiveProps (newProps) {
@@ -34,8 +35,26 @@ const SortableHOC = function (WrappedComponent) {
                 this.containerBox = this.ref.getBoundingClientRect();
             } else if (!newProps.dragInfo.dragging && this.props.dragInfo.dragging) {
                 const newIndex = this.getMouseOverIndex();
-                if (newIndex !== null) {
-                    this.props.onDrop(Object.assign({}, this.props.dragInfo, {newIndex}));
+                this.pendingDrop = newIndex === null ? null : {
+                    dragInfo: this.props.dragInfo,
+                    newIndex
+                };
+            }
+        }
+
+        componentDidUpdate (prevProps) {
+            if (!this.props.dragInfo.dragging && prevProps.dragInfo.dragging) {
+                const pendingDrop = this.pendingDrop;
+                this.pendingDrop = null;
+                if (pendingDrop) {
+                    // Commit the model reorder after React has painted the
+                    // drag-end frame. Calling a parent mutation from
+                    // componentWillReceiveProps allowed that parent refresh
+                    // to be swallowed by the update already in progress,
+                    // leaving asset cards labelled with their pre-drop order.
+                    this.props.onDrop(Object.assign({}, pendingDrop.dragInfo, {
+                        newIndex: pendingDrop.newIndex
+                    }));
                 }
             }
         }
@@ -129,6 +148,11 @@ const SortableHOC = function (WrappedComponent) {
         isRtl: PropTypes.bool
     };
 
+    return SortableWrapper;
+};
+
+const SortableHOC = function (WrappedComponent) {
+    const SortableWrapper = createSortableWrapper(WrappedComponent);
     const mapStateToProps = state => ({
         dragInfo: state.scratchGui.assetDrag,
         isRtl: state.locales.isRtl
@@ -142,4 +166,5 @@ const SortableHOC = function (WrappedComponent) {
     )(SortableWrapper);
 };
 
+export {createSortableWrapper};
 export default SortableHOC;

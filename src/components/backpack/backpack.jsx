@@ -60,6 +60,7 @@ const Backpack = ({
     <div className={styles.backpackContainer}>
         <div
             className={styles.backpackHeader}
+            data-studio-target="backpack-toggle"
             onClick={onToggle}
         >
             {onToggle ? (
@@ -86,6 +87,7 @@ const Backpack = ({
                 className={classNames(styles.backpackList, {
                     [styles.dragOver]: dragOver || blockDragOver
                 })}
+                data-studio-target="backpack-list"
                 ref={containerRef}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
@@ -123,6 +125,7 @@ const Backpack = ({
                                         key={item.id}
                                         name={intl.formatMessage(labelMap[item.type])}
                                         selected={false}
+                                        studioTarget={`backpack-item:${item.type}:${item.id}`}
                                         onClick={noop}
                                         onDeleteButtonClick={onDelete}
                                         // Currently, renaming sprites is not supported.

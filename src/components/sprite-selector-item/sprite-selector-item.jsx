@@ -17,6 +17,8 @@ const SpriteSelectorItem = props => (
             className: classNames(props.className, styles.spriteSelectorItem, {
                 [styles.isSelected]: props.selected
             }),
+            ...(typeof props.name === 'string' ? {'data-studio-sprite-name': props.name} : {}),
+            ...(props.studioTarget ? {'data-studio-target': props.studioTarget} : {}),
             onClick: props.onClick,
             onMouseEnter: props.onMouseEnter,
             onMouseLeave: props.onMouseLeave,
@@ -51,13 +53,19 @@ const SpriteSelectorItem = props => (
         {(props.selected && props.onDeleteButtonClick) ? (
             <DeleteButton
                 className={styles.deleteButton}
+                studioTarget={props.studioTarget ? `${props.studioTarget}:delete` : null}
                 onClick={props.onDeleteButtonClick}
             />
         ) : null }
         {props.onDuplicateButtonClick || props.onDeleteButtonClick || props.onExportButtonClick ? (
             <ContextMenu id={`${props.name}-${contextMenuId++}`}>
                 {props.onDuplicateButtonClick ? (
-                    <MenuItem onClick={props.onDuplicateButtonClick}>
+                    <MenuItem
+                        attributes={props.studioTarget ? {
+                            'data-studio-target': `${props.studioTarget}:duplicate`
+                        } : null}
+                        onClick={props.onDuplicateButtonClick}
+                    >
                         <FormattedMessage
                             defaultMessage="duplicate"
                             description="Menu item to duplicate in the right click menu"
@@ -66,7 +74,12 @@ const SpriteSelectorItem = props => (
                     </MenuItem>
                 ) : null}
                 {props.onExportButtonClick ? (
-                    <MenuItem onClick={props.onExportButtonClick}>
+                    <MenuItem
+                        attributes={props.studioTarget ? {
+                            'data-studio-target': `${props.studioTarget}:export`
+                        } : null}
+                        onClick={props.onExportButtonClick}
+                    >
                         <FormattedMessage
                             defaultMessage="export"
                             description="Menu item to export the selected item"
@@ -75,7 +88,12 @@ const SpriteSelectorItem = props => (
                     </MenuItem>
                 ) : null }
                 {props.onRenameButtonClick ? (
-                    <MenuItem onClick={props.onRenameButtonClick}>
+                    <MenuItem
+                        attributes={props.studioTarget ? {
+                            'data-studio-target': `${props.studioTarget}:rename`
+                        } : null}
+                        onClick={props.onRenameButtonClick}
+                    >
                         <FormattedMessage
                             defaultMessage="rename"
                             description="Menu item to rename an item"
@@ -84,7 +102,12 @@ const SpriteSelectorItem = props => (
                     </MenuItem>
                 ) : null}
                 {props.onDeleteButtonClick ? (
-                    <DangerousMenuItem onClick={props.onDeleteButtonClick}>
+                    <DangerousMenuItem
+                        attributes={props.studioTarget ? {
+                            'data-studio-target': `${props.studioTarget}:delete-menu`
+                        } : null}
+                        onClick={props.onDeleteButtonClick}
+                    >
                         <FormattedMessage
                             defaultMessage="delete"
                             description="Menu item to delete in the right click menu"
@@ -114,7 +137,8 @@ SpriteSelectorItem.propTypes = {
     onMouseEnter: PropTypes.func,
     onMouseLeave: PropTypes.func,
     preventContextMenu: PropTypes.bool,
-    selected: PropTypes.bool.isRequired
+    selected: PropTypes.bool.isRequired,
+    studioTarget: PropTypes.string
 };
 
 export default SpriteSelectorItem;

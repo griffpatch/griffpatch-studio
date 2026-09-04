@@ -1,0 +1,67 @@
+{
+  "checkedOn": "2026-09-04",
+  "scope": "Unicode data provenance and current official notice; retain original headers",
+  "termsUrl": "https://www.unicode.org/copyright.html",
+  "licence": {
+    "url": "https://www.unicode.org/license.txt",
+    "text": "UNICODE LICENSE V3\n\nCOPYRIGHT AND PERMISSION NOTICE\n\nCopyright © 1991-2026 Unicode, Inc.\n\nNOTICE TO USER: Carefully read the following legal agreement. BY\nDOWNLOADING, INSTALLING, COPYING OR OTHERWISE USING DATA FILES, AND/OR\nSOFTWARE, YOU UNEQUIVOCALLY ACCEPT, AND AGREE TO BE BOUND BY, ALL OF THE\nTERMS AND CONDITIONS OF THIS AGREEMENT. IF YOU DO NOT AGREE, DO NOT\nDOWNLOAD, INSTALL, COPY, DISTRIBUTE OR USE THE DATA FILES OR SOFTWARE.\n\nPermission is hereby granted, free of charge, to any person obtaining a\ncopy of data files and any associated documentation (the \"Data Files\") or\nsoftware and any associated documentation (the \"Software\") to deal in the\nData Files or Software without restriction, including without limitation\nthe rights to use, copy, modify, merge, publish, distribute, and/or sell\ncopies of the Data Files or Software, and to permit persons to whom the\nData Files or Software are furnished to do so, provided that either (a)\nthis copyright and permission notice appear with all copies of the Data\nFiles or Software, or (b) this copyright and permission notice appear in\nassociated Documentation.\n\nTHE DATA FILES AND SOFTWARE ARE PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY\nKIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF\nTHIRD PARTY RIGHTS.\n\nIN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE\nBE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES,\nOR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,\nWHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,\nARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE DATA\nFILES OR SOFTWARE.\n\nExcept as contained in this notice, the name of a copyright holder shall\nnot be used in advertising or otherwise to promote the sale, use or other\ndealings in these Data Files or Software without prior written\nauthorization of the copyright holder.\n",
+    "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96"
+  },
+  "tables": [
+    {
+      "name": "grapheme-breaker",
+      "unicodeVersion": "8.0.0",
+      "input": {
+        "url": "https://www.unicode.org/Public/8.0.0/ucd/auxiliary/GraphemeBreakProperty.txt",
+        "sha256": "230005412f9a47128e37bc52330766aaa0b5522a53737a89cff66e891e14527a",
+        "header": "# GraphemeBreakProperty-8.0.0.txt\n# Date: 2015-02-13, 13:47:14 GMT [MD]\n#\n# Unicode Character Database\n# Copyright (c) 1991-2015 Unicode, Inc.\n# For terms of use, see http://www.unicode.org/terms_of_use.html\n# For documentation, see http://www.unicode.org/reports/tr44/\n\n# ================================================\n\n# Property:\tGrapheme_Cluster_Break\n"
+      },
+      "generator": {
+        "file": "node_modules/grapheme-breaker/src/generate_data.js",
+        "sha256": "894e4900f667bb2f08b2098e7b919a66b8ecb190e54bcdf65558287a164a3806"
+      },
+      "generatedSha256": "adaa871e2cc9ad35409fe2583555423b43ca618fc004613a11ca0c51653e36c2",
+      "installedSha256": "adaa871e2cc9ad35409fe2583555423b43ca618fc004613a11ca0c51653e36c2",
+      "byteIdentical": true,
+      "codePointsCompared": 1114112,
+      "mismatches": 0,
+      "classMapIdentical": true
+    },
+    {
+      "name": "linebreak",
+      "unicodeVersion": "7.0.0",
+      "input": {
+        "url": "https://www.unicode.org/Public/7.0.0/ucd/LineBreak.txt",
+        "sha256": "3b359eeff325f7e773ea9d5feb8af053b94c579844f0db7ce648f418c9d136d8",
+        "header": "# LineBreak-7.0.0.txt\n# Date: 2014-02-28, 23:15:00 GMT [KW, LI]\n#\n# Line_Break Property\n#\n# This file is a normative contributory data file in the\n# Unicode Character Database.\n# It contains both normative and informative data.\n#\n# Copyright (c) 1991-2014 Unicode, Inc.\n# For terms of use, see http://www.unicode.org/terms_of_use.html\n#"
+      },
+      "generator": {
+        "file": "node_modules/linebreak/src/generate_data.js",
+        "sha256": "b106573ba4912998d9438e8428745fac538f3727d6a12dcd8937392057bf6e96"
+      },
+      "generatedSha256": "795ba2f6437f6e5775421336daf9f59f27158a292a6f32359ee43c8196516f1c",
+      "installedSha256": "6b7a1b051061f3d9fb5931965874beb7b706f0c029e27d843bc232331c9fd2e0",
+      "byteIdentical": false,
+      "codePointsCompared": 1114112,
+      "mismatches": 0
+    }
+  ],
+  "fixtures": [
+    {
+      "version": "8.0.0",
+      "url": "https://www.unicode.org/Public/8.0.0/ucd/auxiliary/GraphemeBreakTest.txt",
+      "sha256": "0cedd6e0f5cadf57ce9cfc96beccfd083b0faa0809a631a777cd25f0316bfabb",
+      "matchesLocal": true,
+      "local": "node_modules/grapheme-breaker/test/GraphemeBreakTest.txt",
+      "header": "# GraphemeBreakTest-8.0.0.txt\n# Date: 2015-02-13, 13:47:15 GMT [MD]\n#\n# Unicode Character Database\n# Copyright (c) 1991-2015 Unicode, Inc.\n# For terms of use, see http://www.unicode.org/terms_of_use.html\n# For documentation, see http://www.unicode.org/reports/tr44/\n#"
+    },
+    {
+      "version": "7.0.0",
+      "url": "https://www.unicode.org/Public/7.0.0/ucd/auxiliary/LineBreakTest.txt",
+      "sha256": "362329c261dc1a7cbdd7b26ab35d7f1e988dc750971182673fd5ddb734c79fe9",
+      "matchesLocal": true,
+      "local": "node_modules/linebreak/test/LineBreakTest.txt",
+      "header": "# LineBreakTest-7.0.0.txt\n# Date: 2014-02-19, 15:51:25 GMT [MD]\n#\n# Unicode Character Database\n# Copyright (c) 1991-2014 Unicode, Inc.\n# For terms of use, see http://www.unicode.org/terms_of_use.html\n# For documentation, see http://www.unicode.org/reports/tr44/\n#"
+    }
+  ]
+}

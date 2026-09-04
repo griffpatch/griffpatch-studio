@@ -60,6 +60,7 @@ const StageSelector = props => {
     } = props;
     return (
         <Box
+            data-studio-target="stage-selector"
             className={classNames(styles.stageSelector, {
                 [styles.isSelected]: selected,
                 [styles.raised]: raised || dragOver,
@@ -102,6 +103,7 @@ const StageSelector = props => {
                     {
                         title: intl.formatMessage(messages.addBackdropFromFile),
                         img: fileUploadIcon,
+                        studioTarget: 'backdrop-stage-upload-open',
                         onClick: onBackdropFileUploadClick,
                         fileAccept: '.svg, .png, .bmp, .jpg, .jpeg, .jfif, .webp, .gif',
                         fileChange: onBackdropFileUpload,
@@ -115,6 +117,7 @@ const StageSelector = props => {
                     }, {
                         title: intl.formatMessage(messages.addBackdropFromPaint),
                         img: paintIcon,
+                        studioTarget: 'backdrop-stage-paint-create',
                         onClick: onEmptyBackdropClick
                     }, {
                         title: intl.formatMessage(messages.addBackdropFromLibrary),
@@ -123,6 +126,7 @@ const StageSelector = props => {
                     }
                 ]}
                 title={intl.formatMessage(messages.addBackdropFromLibrary)}
+                studioTarget="backdrop-library-open"
                 tooltipPlace={isRtl(intl.locale) ? 'right' : 'left'}
                 onClick={onNewBackdropClick}
             />

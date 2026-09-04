@@ -1,0 +1,74 @@
+{
+  "scope": "Reviewed vendored notice evidence, not a complete release clearance",
+  "assets": [
+    {
+      "file": "src/addons/libraries/thirdparty/cs/chart.min.js",
+      "sha256": "fbc45926e6b46845a0f905552a0e0b1331049bff1115ecf94dbe0904d895e710",
+      "packageEvidence": {
+        "metadataUrl": "https://registry.npmjs.org/chart.js/3.9.1",
+        "metadataSha256": "c38a6a34f67e30a0e0c7c5494b784a5aabe186f0bd79638a2476f22362faae3e",
+        "tarball": "https://registry.npmjs.org/chart.js/-/chart.js-3.9.1.tgz",
+        "integrity": "sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==",
+        "files": [
+          {
+            "path": "package/dist/chart.min.js",
+            "sha256": "fbc45926e6b46845a0f905552a0e0b1331049bff1115ecf94dbe0904d895e710",
+            "matchesLocal": true
+          },
+          {
+            "path": "package/LICENSE.md",
+            "sha256": "5a0877ad6d818529be4f33009d0942cdf7e2ed7656156f4aba7308459a546030",
+            "text": "The MIT License (MIT)\n\nCopyright (c) 2014-2022 Chart.js Contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+          }
+        ]
+      },
+      "notices": [
+        {
+          "name": "chart.js",
+          "version": "3.9.1",
+          "revision": "5ea4b3adffcea61c7ec256ac3976927c5619c17a",
+          "url": "https://raw.githubusercontent.com/chartjs/Chart.js/5ea4b3adffcea61c7ec256ac3976927c5619c17a/LICENSE.md",
+          "text": "The MIT License (MIT)\n\nCopyright (c) 2014-2022 Chart.js Contributors\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
+          "sha256": "5a0877ad6d818529be4f33009d0942cdf7e2ed7656156f4aba7308459a546030",
+          "embeddedHeader": "/*!\n * Chart.js v3.9.1\n * https://www.chartjs.org\n * (c) 2022 Chart.js Contributors\n * Released under the MIT License\n */"
+        },
+        {
+          "name": "@kurkle/color",
+          "version": "0.2.1",
+          "revision": "7f441c91cb3a6e578680e63e448a6acca2e68f56",
+          "url": "https://raw.githubusercontent.com/kurkle/color/7f441c91cb3a6e578680e63e448a6acca2e68f56/LICENSE.md",
+          "text": "The MIT License (MIT)\n\nCopyright (c) 2018-2021 Jukka Kurkela\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
+          "sha256": "2859c50313bad2ba77b081410c477beaf92b60ca13a77a248d89859a6dd6ac81",
+          "embeddedHeader": "/*!\n * @kurkle/color v0.2.1\n * https://github.com/kurkle/color#readme\n * (c) 2022 Jukka Kurkela\n * Released under the MIT License\n */"
+        }
+      ]
+    },
+    {
+      "file": "src/addons/libraries/thirdparty/cs/tinycolor-min.js",
+      "sha256": "02f8915aed24d96d4e7d90af2f3c885d9e1b2b1fa288f4759b49bd28c6a90338",
+      "sourceEvidence": {
+        "url": "https://raw.githubusercontent.com/TurboWarp/addons/965a016a106356610eadb71ede21581965f71c05/libraries/thirdparty/cs/tinycolor-min.js",
+        "revision": "965a016a106356610eadb71ede21581965f71c05",
+        "sha256": "02f8915aed24d96d4e7d90af2f3c885d9e1b2b1fa288f4759b49bd28c6a90338",
+        "matchesLocal": true
+      },
+      "licenceMapping": {
+        "path": "libraries/license-info.json",
+        "url": "https://raw.githubusercontent.com/TurboWarp/addons/965a016a106356610eadb71ede21581965f71c05/libraries/license-info.json",
+        "text": "{\n  \"spark-md5\": \"MIT\",\n  \"text-field-edit\": \"MIT\",\n  \"scratchblocks\": \"MIT\",\n  \"scratch-blocks\": \"Apache-2.0\",\n  \"icu-message-formatter\": \"Apache-2.0\",\n  \"vue\": \"MIT\",\n  \"tinycolor2\": \"MIT\",\n  \"chartjs\": \"MIT\",\n  \"color-picker-web-component\": \"MIT\",\n  \"comlink\": \"Apache-2.0\",\n  \"Sora\": \"OFL\",\n  \"sortable\": \"MIT\",\n  \"fuse\": \"Apache-2.0\",\n  \"idb\": \"ISC\"\n}\n",
+        "sha256": "251d5c10deebfd868d7ebe2f89f4b3f21724720ae9a91b47446cad840da8a426"
+      },
+      "notices": [
+        {
+          "name": "tinycolor2",
+          "version": null,
+          "revision": "965a016a106356610eadb71ede21581965f71c05",
+          "url": "https://raw.githubusercontent.com/TurboWarp/addons/965a016a106356610eadb71ede21581965f71c05/libraries/licenses/MIT.txt",
+          "text": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+          "sha256": "bccaa8b6c09f94e81f06696e179dbe058464bbdfbc823b6d49cada1d71e84ac3",
+          "embeddedHeader": "// https://github.com/bgrins/TinyColor\n// Brian Grinstead, MIT License"
+        }
+      ]
+    }
+  ]
+}

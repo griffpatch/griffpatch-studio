@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {ContextMenu, MenuItem} from 'react-contextmenu';
 import classNames from 'classnames';
 
@@ -11,26 +12,50 @@ const StyledContextMenu = props => (
     />
 );
 
-const StyledMenuItem = props => (
+const StyledMenuItem = ({attributes, ...props}) => (
     <MenuItem
         {...props}
-        attributes={{className: styles.menuItem}}
+        attributes={{
+            ...attributes,
+            className: classNames(styles.menuItem, attributes && attributes.className)
+        }}
     />
 );
 
-const BorderedMenuItem = props => (
+const BorderedMenuItem = ({attributes, ...props}) => (
     <MenuItem
         {...props}
-        attributes={{className: classNames(styles.menuItem, styles.menuItemBordered)}}
+        attributes={{
+            ...attributes,
+            className: classNames(styles.menuItem, styles.menuItemBordered, attributes && attributes.className)
+        }}
     />
 );
 
-const DangerousMenuItem = props => (
+const DangerousMenuItem = ({attributes, ...props}) => (
     <MenuItem
         {...props}
-        attributes={{className: classNames(styles.menuItem, styles.menuItemBordered, styles.menuItemDanger)}}
+        attributes={{
+            ...attributes,
+            className: classNames(
+                styles.menuItem,
+                styles.menuItemBordered,
+                styles.menuItemDanger,
+                attributes && attributes.className
+            )
+        }}
     />
 );
+
+const menuItemPropTypes = {
+    attributes: PropTypes.shape({
+        className: PropTypes.string
+    })
+};
+
+StyledMenuItem.propTypes = menuItemPropTypes;
+BorderedMenuItem.propTypes = menuItemPropTypes;
+DangerousMenuItem.propTypes = menuItemPropTypes;
 
 
 export {

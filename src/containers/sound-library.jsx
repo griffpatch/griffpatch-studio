@@ -15,6 +15,7 @@ import {getSoundLibrary} from '../lib/libraries/tw-async-libraries';
 import soundTags from '../lib/libraries/sound-tags';
 
 import {connect} from 'react-redux';
+import {runStudioProjectOperationSource} from '../studio/bridge/project-operation-capture';
 
 const messages = defineMessages({
     libraryTitle: {
@@ -174,7 +175,10 @@ class SoundLibrary extends React.PureComponent {
             sampleCount: soundItem.sampleCount,
             name: soundItem.name
         };
-        this.props.vm.addSound(vmSound).then(() => {
+        runStudioProjectOperationSource(this.props.vm, {
+            kind: 'sound-library',
+            libraryItem: {name: soundItem.name, md5ext: soundItem._md5}
+        }, () => this.props.vm.addSound(vmSound)).then(() => {
             this.props.onNewSound();
         });
     }

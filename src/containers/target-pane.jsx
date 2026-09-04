@@ -23,7 +23,8 @@ import {fetchSprite, fetchCode} from '../lib/backpack-api';
 import randomizeSpritePosition from '../lib/randomize-sprite-position';
 import downloadBlob from '../lib/download-blob';
 import log from '../lib/log';
-import {placeInViewport} from '../lib/backpack/code-payload.js';
+import {backpackScriptSource, placeInViewport} from '../lib/backpack/code-payload.js';
+import {runStudioProjectOperationSource} from '../studio/bridge/project-operation-capture';
 
 class TargetPane extends React.Component {
     constructor (props) {
@@ -160,16 +161,16 @@ class TargetPane extends React.Component {
     setFileInput (input) {
         this.fileInput = input;
     }
-    handleBlockDragEnd (blocks) {
+    handleBlockDragEnd (blocks, topBlockId) {
         if (this.props.hoveredTarget.sprite && this.props.hoveredTarget.sprite !== this.props.editingTarget) {
-            this.shareBlocks(blocks, this.props.hoveredTarget.sprite, this.props.editingTarget);
+            this.shareBlocks(blocks, this.props.hoveredTarget.sprite, this.props.editingTarget, topBlockId);
             this.props.onReceivedBlocks(true);
         }
     }
-    shareBlocks (payload, targetId, optFromTargetId) {
+    shareBlocks (payload, targetId, optFromTargetId, sourceBlockId) {
         // Position the top-level block based on the scroll position.
         const centered = placeInViewport(payload, this.props.workspaceMetrics.targets[targetId], this.props.isRtl);
-        return this.props.vm.shareBlocksToTarget(centered, targetId, optFromTargetId);
+        return this.props.vm.shareBlocksToTarget(centered, targetId, optFromTargetId, sourceBlockId);
     }
     handleDrop (dragInfo) {
         const {sprite: targetId} = this.props.hoveredTarget;
@@ -206,7 +207,11 @@ class TargetPane extends React.Component {
                 }, targetId);
             } else if (dragInfo.dragType === DragConstants.BACKPACK_CODE) {
                 fetchCode(dragInfo.payload.bodyUrl)
-                    .then(blocks => this.shareBlocks(blocks, targetId))
+                    .then(blocks => runStudioProjectOperationSource(
+                        this.props.vm,
+                        backpackScriptSource(dragInfo.payload),
+                        () => this.shareBlocks(blocks, targetId)
+                    ))
                     .then(() => this.props.vm.refreshWorkspace());
             }
         }

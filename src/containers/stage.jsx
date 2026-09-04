@@ -11,6 +11,10 @@ import VideoProvider from '../lib/video/video-provider';
 import {BitmapAdapter as V2BitmapAdapter} from '@turbowarp/scratch-svg-renderer';
 
 import StageComponent from '../components/stage/stage.jsx';
+import {
+    beginStudioTargetPropertyGesture,
+    EDITABLE_TARGET_PROPERTIES
+} from '../studio/bridge/target-property-edit-hook';
 
 import {
     activateColorPicker,
@@ -386,6 +390,18 @@ class Stage extends React.Component {
         // Do not start drag unless in editor drag mode or target is draggable
         if (!(this.props.useEditorDragStyle || target.draggable)) return;
 
+        if (target.isOriginal) {
+            const originalSprites = this.props.vm.runtime.targets.filter(candidate => (
+                candidate.isOriginal && !candidate.isStage
+            ));
+            this.finishStudioDragEdit = beginStudioTargetPropertyGesture(
+                this.props.vm,
+                target,
+                [...EDITABLE_TARGET_PROPERTIES, 'layerOrder'],
+                originalSprites
+            );
+        }
+
         // Dragging always brings the target to the front
         target.goToFront();
 
@@ -411,12 +427,15 @@ class Stage extends React.Component {
     onStopDrag (mouseX, mouseY) {
         const dragId = this.state.dragId;
         const commonStopDragActions = () => {
+            const finishStudioDragEdit = this.finishStudioDragEdit;
+            this.finishStudioDragEdit = null;
             this.props.vm.stopDrag(dragId);
             this.setState({
                 isDragging: false,
                 dragOffset: null,
                 dragId: null
             });
+            if (finishStudioDragEdit) finishStudioDragEdit();
         };
         if (this.props.useEditorDragStyle) {
             // Need to sequence these actions to prevent flickering.

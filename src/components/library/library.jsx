@@ -337,6 +337,9 @@ class LibraryComponent extends React.Component {
                                 samples={dataItem.samples}
                                 docsURI={dataItem.docsURI}
                                 showPlayButton={this.props.showPlayButton}
+                                studioItemKey={dataItem.costumes && dataItem.costumes[0] ?
+                                    dataItem.costumes[0].md5ext :
+                                    (dataItem.md5ext || dataItem._md5 || dataItem.extensionId)}
                                 onMouseEnter={this.handleMouseEnter}
                                 onMouseLeave={this.handleMouseLeave}
                                 onSelect={this.handleSelect}

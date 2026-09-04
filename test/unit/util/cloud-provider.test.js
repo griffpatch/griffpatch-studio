@@ -1,11 +1,25 @@
 import CloudProvider from '../../../src/lib/cloud-provider';
 
 let websocketConstructorCount = 0;
+const originalWebSocket = global.WebSocket;
+const originalLocation = global.location;
+
+beforeAll(() => {
+    // This suite uses the Node test environment, not a browser page.
+    global.location = {protocol: 'https:'};
+});
+afterAll(() => {
+    if (originalLocation === undefined) delete global.location;
+    else global.location = originalLocation;
+    if (originalWebSocket === undefined) delete global.WebSocket;
+    else global.WebSocket = originalWebSocket;
+});
 
 // Stub the global websocket so we can call open/close/error/send on it
 global.WebSocket = function (url) {
     this._url = url;
     this._sentMessages = [];
+    this.readyState = 1;
 
     // These are not real websocket methods, but used to trigger callbacks
     this._open = () => this.onopen();
@@ -18,8 +32,9 @@ global.WebSocket = function (url) {
 
     websocketConstructorCount++;
 };
-global.WebSocket.CLOSING = 'CLOSING';
-global.WebSocket.CLOSED = 'CLOSED';
+global.WebSocket.OPEN = 1;
+global.WebSocket.CLOSING = 2;
+global.WebSocket.CLOSED = 3;
 
 describe('CloudProvider', () => {
     let cloudProvider = null;

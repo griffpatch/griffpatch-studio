@@ -35,6 +35,8 @@ import surpriseIcon from '../components/action-menu/icon--surprise.svg';
 import searchIcon from '../components/action-menu/icon--search.svg';
 
 import {getCostumeLibrary, getBackdropLibrary} from '../lib/libraries/tw-async-libraries';
+import {runStudioTargetPropertyEdit} from '../studio/bridge/target-property-edit-hook';
+import {runStudioProjectOperationSource} from '../studio/bridge/project-operation-capture';
 
 let messages = defineMessages({
     addLibraryBackdropMsg: {
@@ -129,8 +131,10 @@ class CostumeTab extends React.Component {
         }
     }
     handleSelectCostume (costumeIndex) {
-        this.props.vm.editingTarget.setCostume(costumeIndex);
-        this.setState({selectedCostumeIndex: costumeIndex});
+        runStudioTargetPropertyEdit(this.props.vm, ['currentCostume'], () => {
+            this.props.vm.editingTarget.setCostume(costumeIndex);
+            this.setState({selectedCostumeIndex: costumeIndex});
+        });
     }
     handleDeleteCostume (costumeIndex) {
         const restoreCostumeFun = this.props.vm.deleteCostume(costumeIndex);
@@ -166,7 +170,9 @@ class CostumeTab extends React.Component {
         const name = this.props.vm.editingTarget.isStage ?
             this.props.intl.formatMessage(messages.backdrop, {index: 1}) :
             this.props.intl.formatMessage(messages.costume, {index: 1});
-        this.handleNewCostume(emptyCostume(name));
+        runStudioProjectOperationSource(this.props.vm, {
+            kind: 'costume-paint'
+        }, () => this.handleNewCostume(emptyCostume(name)));
     }
     async handleSurpriseCostume () {
         const costumeLibraryContent = await getCostumeLibrary();
@@ -203,7 +209,12 @@ class CostumeTab extends React.Component {
                 vmCostumes.forEach((costume, i) => {
                     costume.name = `${fileName}${i ? i + 1 : ''}`;
                 });
-                this.handleNewCostume(vmCostumes, false, targetId).then(() => {
+                const addCostumes = () => this.handleNewCostume(vmCostumes, false, targetId);
+                const addition = vmCostumes.length === 1 ? runStudioProjectOperationSource(vm, {
+                    kind: 'costume-upload',
+                    fileName
+                }, addCostumes) : addCostumes();
+                addition.then(() => {
                     if (fileIndex === fileCount - 1) {
                         this.props.onCloseImporting();
                     }
@@ -218,8 +229,9 @@ class CostumeTab extends React.Component {
         if (dropInfo.dragType === DragConstants.COSTUME) {
             const sprite = this.props.vm.editingTarget.sprite;
             const activeCostume = sprite.costumes[this.state.selectedCostumeIndex];
-            this.props.vm.reorderCostume(this.props.vm.editingTarget.id,
+            const reordered = this.props.vm.reorderCostume(this.props.vm.editingTarget.id,
                 dropInfo.index, dropInfo.newIndex);
+            if (reordered) this.props.vm.emitTargetsUpdate(false /* Do not emit project changed twice */);
             this.setState({selectedCostumeIndex: sprite.costumes.indexOf(activeCostume)});
         } else if (dropInfo.dragType === DragConstants.BACKPACK_COSTUME) {
             this.props.vm.addCostume(dropInfo.payload.body, {
@@ -267,11 +279,12 @@ class CostumeTab extends React.Component {
         const addLibraryFunc = isStage ? onNewLibraryBackdropClick : onNewLibraryCostumeClick;
         const addLibraryIcon = isStage ? addLibraryBackdropIcon : addLibraryCostumeIcon;
 
-        const costumeData = target.costumes ? target.costumes.map(costume => ({
+        const costumeData = target.costumes ? target.costumes.map((costume, index) => ({
             name: costume.name,
             asset: costume.asset,
             details: costume.size ? this.formatCostumeDetails(costume.size, costume.bitmapResolution) : null,
-            dragPayload: costume
+            dragPayload: costume,
+            studioTarget: `${isStage ? 'backdrop' : 'costume'}-item:${index}:${costume.assetId}`
         })) : [];
         return (
             <AssetPanel
@@ -279,11 +292,13 @@ class CostumeTab extends React.Component {
                     {
                         title: intl.formatMessage(addLibraryMessage),
                         img: addLibraryIcon,
+                        studioTarget: isStage ? 'backdrop-editor-menu-open' : 'costume-library-open',
                         onClick: addLibraryFunc
                     },
                     {
                         title: intl.formatMessage(addFileMessage),
                         img: fileUploadIcon,
+                        studioTarget: isStage ? 'backdrop-upload-open' : 'costume-upload-open',
                         onClick: this.handleFileUploadClick,
                         fileAccept: '.svg, .png, .bmp, .jpg, .jpeg, .jfif, .webp, .gif',
                         fileChange: this.handleCostumeUpload,
@@ -298,6 +313,7 @@ class CostumeTab extends React.Component {
                     {
                         title: intl.formatMessage(messages.addBlankCostumeMsg),
                         img: paintIcon,
+                        studioTarget: isStage ? 'backdrop-paint-create' : 'costume-paint-create',
                         onClick: this.handleNewBlankCostume
                     },
                     {

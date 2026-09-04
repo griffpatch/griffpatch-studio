@@ -9,7 +9,12 @@ import {APP_NAME} from '../../lib/brand';
 const hosts = [
     {
         name: 'US East',
-        cloudHost: 'wss://clouddata.turbowarp.org'
+        cloudHost: 'wss://clouddata.turbowarp.org',
+        // App branding does not change who operates this external service.
+        provider: {
+            name: 'TurboWarp',
+            href: 'https://turbowarp.org/privacy.html'
+        }
     }
 ];
 

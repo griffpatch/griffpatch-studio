@@ -81,6 +81,7 @@ export async function load(addon) {
       ScratchBlocks.Events.enable();
 
       if (newBlock) {
+        if (this.setDragOrigin) this.setDragOrigin({kind: "workspace-duplicate", blockId: block.id});
         block = newBlock;
         this.targetBlock_ = newBlock;
         if (ScratchBlocks.Events.isEnabled()) {

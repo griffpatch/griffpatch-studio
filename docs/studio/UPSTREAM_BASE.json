@@ -1,0 +1,23 @@
+{
+  "recordedAt": "2026-08-23",
+  "repository": "TurboWarp/scratch-gui",
+  "guiCommit": "a2946eeb9a9dca7857d7ab53d766b54288c7a2ff",
+  "dependencies": {
+    "scratch-vm": {
+      "version": "2.1.46",
+      "commit": "c4823421cb7c17d8d8a89878851ce1668c26a21f"
+    },
+    "scratch-blocks": {
+      "version": "0.1.0",
+      "commit": "4113c5348e6b4c76da9071a1800a62ab96ef793f"
+    },
+    "scratch-paint": {
+      "version": "2.1.61",
+      "commit": "91d109564917e4df31705611a657e773fb23abbb"
+    }
+  },
+  "toolchain": {
+    "node": "24.18.0",
+    "npm": "11.16.0"
+  }
+}

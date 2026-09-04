@@ -22,6 +22,7 @@ import {getSoundLibrary} from '../lib/libraries/tw-async-libraries';
 import {handleFileUpload, soundUpload} from '../lib/file-uploader.js';
 import errorBoundaryHOC from '../lib/error-boundary-hoc.jsx';
 import DragConstants from '../lib/drag-constants';
+import {runStudioProjectOperationSource} from '../studio/bridge/project-operation-capture';
 import downloadBlob from '../lib/download-blob';
 import SharedAudioContext from '../lib/audio/shared-audio-context.js';
 
@@ -138,7 +139,11 @@ class SoundTab extends React.Component {
         handleFileUpload(e.target, (buffer, fileType, fileName, fileIndex, fileCount) => {
             soundUpload(buffer, fileType, storage, newSound => {
                 newSound.name = fileName;
-                this.props.vm.addSound(newSound, targetId).then(() => {
+                const addSound = () => this.props.vm.addSound(newSound, targetId);
+                runStudioProjectOperationSource(this.props.vm, {
+                    kind: 'sound-upload',
+                    fileName
+                }, addSound).then(() => {
                     this.handleNewSound();
                     if (fileIndex === fileCount - 1) {
                         this.props.onCloseImporting();
@@ -153,8 +158,9 @@ class SoundTab extends React.Component {
             const sprite = this.props.vm.editingTarget.sprite;
             const activeSound = sprite.sounds[this.state.selectedSoundIndex];
 
-            this.props.vm.reorderSound(this.props.vm.editingTarget.id,
+            const reordered = this.props.vm.reorderSound(this.props.vm.editingTarget.id,
                 dropInfo.index, dropInfo.newIndex);
+            if (reordered) this.props.vm.emitTargetsUpdate(false /* Do not emit project changed twice */);
 
             this.setState({selectedSoundIndex: sprite.sounds.indexOf(activeSound)});
         } else if (dropInfo.dragType === DragConstants.BACKPACK_COSTUME) {
@@ -192,12 +198,13 @@ class SoundTab extends React.Component {
 
         const sprite = vm.editingTarget.sprite;
 
-        const sounds = sprite.sounds ? sprite.sounds.map(sound => (
+        const sounds = sprite.sounds ? sprite.sounds.map((sound, index) => (
             {
                 url: isRtl ? soundIconRtl : soundIcon,
                 name: sound.name,
                 details: (sound.sampleCount / sound.rate).toFixed(2),
-                dragPayload: sound
+                dragPayload: sound,
+                studioTarget: `sound-item:${index}:${sound.assetId}`
             }
         )) : [];
 
@@ -229,10 +236,12 @@ class SoundTab extends React.Component {
                 buttons={isSupported ? [{
                     title: intl.formatMessage(messages.addSound),
                     img: addSoundFromLibraryIcon,
+                    studioTarget: 'sound-library-open',
                     onClick: onNewSoundFromLibraryClick
                 }, {
                     title: intl.formatMessage(messages.fileUploadSound),
                     img: fileUploadIcon,
+                    studioTarget: 'sound-upload-open',
                     onClick: this.handleFileUploadClick,
                     fileAccept: '.wav, .mp3, .ogg, .flac, .aac, .m4a',
                     fileChange: this.handleSoundUpload,

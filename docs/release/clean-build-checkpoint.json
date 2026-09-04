@@ -1,0 +1,23 @@
+{
+  "purpose": "Verified local production build inputs, not a deployment manifest",
+  "verifiedDate": "2026-09-04",
+  "gui": {
+    "revision": "72f4e9650200f14d094e78860864ca86e22d1557",
+    "lockfileSha256": "7570b4e43d109ce6e0a3e8e917614607100f5f5536e21937e39971068e13b36a"
+  },
+  "scratchBlocks": {
+    "revision": "a505b65a427ccd23fe318f0ccbc09dce39da6395",
+    "lockfileSha256": "6f6490717b77bf08dd42d499bfc3d9b419dc955233fcce084ee599c59f426c18",
+    "horizontalBundleSha256": "64e63fd4929fffb0d2e381c4838527d24e90d56ffa42175488677a9f4a8e884e",
+    "verticalBundleSha256": "daf525d30b611b1aefbe0adaa159e0383439458db59a3057b4377c1ffde913d9"
+  },
+  "toolchain": {
+    "os": "Windows",
+    "node": "24.18.0",
+    "npm": "11.16.0",
+    "python": "3.13.3",
+    "java": "Temurin 11.0.32.1+1"
+  },
+  "productionEditorSha256": "4b0f82934f3b4b8c8e3feff1fafbbd294ea50fb56cf563b3d74dc15940434c6d",
+  "browserSmokeCasesPassed": 5
+}

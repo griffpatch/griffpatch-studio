@@ -469,27 +469,45 @@ class TokenTypeStringEnum extends TokenType {
   *parseTokens(query, idx, depth) {
     for (let valueIdx = 0; valueIdx < this.values.length; valueIdx++) {
       const valueInfo = this.values[valueIdx];
-      let yieldedToken = false;
-
-      const remainingChar = query.length - idx;
-      const substr = query.lowercase.substring(idx);
-
       // If all we have is a string which could be a number, it doesn't count as a defining feature.
       // This is to get rid of "10" constantly suggesting "10 ^ of ()"
-      let isDefiningFeature = !TokenTypeNumberLiteral.isValidNumber(substr);
+      // Judge the enum label, not the entire remaining query: "+23" is a
+      // number, but its leading "+" still identifies an addition block.
+      const isDefiningFeature = !TokenTypeNumberLiteral.isValidNumber(valueInfo.lower);
 
-      if (remainingChar < valueInfo.lower.length) {
-        if (valueInfo.lower.startsWith(substr)) {
-          const end = remainingChar < 0 ? 0 : query.length;
-          yield new Token(idx, end, this, valueInfo, { isTruncated: true, isDefiningFeature });
-          yieldedToken = true;
+      // Match the already-normalized word parts so extra spaces inside a
+      // localized multiword label behave like spaces between separate fields.
+      // The old direct substring comparison made those two native layouts
+      // parse differently even though they are visually indistinguishable.
+      let cursor = idx;
+      let isTruncated = false;
+      let matches = true;
+      for (let partIdx = 0; partIdx < valueInfo.parts.length; partIdx++) {
+        if (partIdx !== 0) {
+          if (cursor >= query.length) {
+            isTruncated = true;
+            break;
+          }
+          if (!QueryInfo.IGNORABLE_CHARS.includes(query.lowercase[cursor])) {
+            matches = false;
+            break;
+          }
+          cursor = query.skipIgnorable(cursor);
         }
-      } else {
-        if (query.lowercase.startsWith(valueInfo.lower, idx)) {
-          yield new Token(idx, idx + valueInfo.lower.length, this, valueInfo, { isDefiningFeature });
-          yieldedToken = true;
+
+        const part = valueInfo.parts[partIdx];
+        const available = query.lowercase.substring(cursor, cursor + part.length);
+        if (!part.startsWith(available)) {
+          matches = false;
+          break;
+        }
+        cursor += available.length;
+        if (available.length < part.length) {
+          isTruncated = true;
+          break;
         }
       }
+      if (matches) yield new Token(idx, cursor, this, valueInfo, { isTruncated, isDefiningFeature });
     }
   }
 
@@ -509,6 +527,12 @@ class TokenTypeStringEnum extends TokenType {
 class TokenTypeStringLiteral extends TokenType {
   static TERMINATORS = [undefined, " ", "+", "-", "*", "/", "=", "<", ">", ")"];
 
+  // These characters can either finish a value (`100%`, `touching edge?`)
+  // or belong to a user's text (`What's your name?`). Enumerate the prefix at
+  // the punctuation without treating it as a universal string terminator, so
+  // both interpretations remain available to the surrounding native block.
+  static ADJACENT_LABEL_PUNCTUATION = ["%", "?", ",", ":"];
+
   static isTerminator(char) {
     return this.TERMINATORS.includes(char);
   }
@@ -524,7 +548,6 @@ class TokenTypeStringLiteral extends TokenType {
    */
   *parseTokens(query, idx, depth) {
     // First, look for strings in quotes
-    let quoteEnd = -1;
     if (query.str[idx] === '"' || query.str[idx] === "'") {
       const quote = query.str[idx];
       let value = "";
@@ -535,8 +558,10 @@ class TokenTypeStringLiteral extends TokenType {
           valueStart = ++i;
         } else if (query.str[i] === quote) {
           yield new Token(idx, i + 1, this, value + query.str.substring(valueStart, i));
-          quoteEnd = i + 1;
-          break;
+          // A closed quoted literal is atomic. Parsing its prefixes as well
+          // lets a label inside the quotes invalidate the intended result
+          // (for example, the name in `set "fish to fry" to 50`).
+          return;
         }
       }
     }
@@ -544,9 +569,12 @@ class TokenTypeStringLiteral extends TokenType {
     let wasTerminator = false;
     let wasIgnorable = false;
     for (let i = idx; i <= query.length; i++) {
+      if (i !== idx && this.constructor.ADJACENT_LABEL_PUNCTUATION.includes(query.str[i])) {
+        yield new Token(idx, i, this, query.str.substring(idx, i));
+      }
       const isTerminator = TokenTypeStringLiteral.isTerminator(query.str[i]);
       const isIgnorable = QueryInfo.IGNORABLE_CHARS.includes(query.str[i]);
-      if ((wasTerminator !== isTerminator || i == query.length) && !wasIgnorable && i !== idx && i !== quoteEnd) {
+      if ((wasTerminator !== isTerminator || i == query.length) && !wasIgnorable && i !== idx) {
         const value = query.str.substring(idx, i);
         yield new Token(idx, i, this, value);
       }
@@ -566,13 +594,17 @@ class TokenTypeStringLiteral extends TokenType {
  * but accepts like '0xFF', 'Infinity' or '1e3'.
  */
 class TokenTypeNumberLiteral extends TokenType {
+  static isTerminator(char) {
+    return TokenTypeStringLiteral.isTerminator(char) || TokenTypeStringLiteral.ADJACENT_LABEL_PUNCTUATION.includes(char);
+  }
+
   static isValidNumber(str) {
     return !isNaN(+str) || !isNaN(parseFloat(+str));
   }
 
   *parseTokens(query, idx, depth) {
     for (let i = idx; i <= query.length; i++) {
-      if (TokenTypeStringLiteral.isTerminator(query.str[i]) && i !== idx) {
+      if (TokenTypeNumberLiteral.isTerminator(query.str[i]) && i !== idx) {
         const value = query.str.substring(idx, i);
         if (TokenTypeNumberLiteral.isValidNumber(value)) {
           yield new Token(idx, i, this, value);
@@ -603,7 +635,7 @@ class TokenTypeColor extends TokenType {
   }
 
   createText(token, query, endOnly) {
-    return query.query.substring(token.start, token.end);
+    return query.str.substring(token.start, token.end);
   }
 }
 
@@ -701,7 +733,11 @@ class TokenTypeBlock extends TokenType {
             }
             break;
           case BlockInputType.STRING:
-            fullTokenProvider = querier.tokenGroupString;
+            // Definition names are literal text, not reporter expressions.
+            // Ordinary string inputs keep the complete expression grammar.
+            fullTokenProvider = blockPart.literalOnly
+              ? new TokenProviderOptional(querier.tokenTypeStringLiteral)
+              : querier.tokenGroupString;
             break;
           case BlockInputType.NUMBER:
             fullTokenProvider = querier.tokenGroupNumber;
@@ -838,7 +874,7 @@ class TokenTypeBlock extends TokenType {
     let hasDefiningFeature = false;
 
     for (const subtoken of subtokens) {
-      isTruncated |= subtoken.isTruncated; // If any of our kids are truncated, so are we
+      isTruncated ||= subtoken.isTruncated; // If any of our kids are truncated, so are we
       isLegal &&= subtoken.isLegal; // If any of our kids are illegal, so are we
       if (subtoken.isDefiningFeature && subtoken.start < query.length) hasDefiningFeature = true;
     }
@@ -1028,6 +1064,34 @@ export class QueryResult {
   }
 
   /**
+   * Counts case-only differences between typed enum/label tokens and the
+   * native strings they matched. Matching remains case-insensitive, but an
+   * exact-cased identity should lead otherwise equivalent alternatives.
+   * @returns {number}
+   */
+  getCaseMismatchCount() {
+    if (typeof this.caseMismatchCount === "number") return this.caseMismatchCount;
+
+    let mismatchCount = 0;
+    const visit = (token) => {
+      if (token.type instanceof TokenTypeStringEnum && token.value?.value?.string) {
+        const typed = this.query.str.substring(token.start, token.end);
+        const native = token.value.value.string;
+        for (let i = 0; i < Math.min(typed.length, native.length); i++) {
+          if (typed[i] !== native[i] && typed[i].toLowerCase() === native[i].toLowerCase()) mismatchCount++;
+        }
+      }
+      // Improper fuzzy block tokens store a string form rather than a subtoken
+      // tree. Their relative relevance continues to use the existing metrics.
+      if (token.value?.stringForm) return;
+      const subtokens = token.type.getSubtokens(token, this.query);
+      if (subtokens) for (const subtoken of subtokens) visit(subtoken);
+    };
+    visit(this.token);
+    return (this.caseMismatchCount = mismatchCount);
+  }
+
+  /**
    * @returns {{stringLength: number, tokenLength: number}}
    */
   getLengths() {
@@ -1214,7 +1278,7 @@ export default class WorkspaceQuerier {
           results.push(new QueryResult(query, option));
         } else {
           const text = option.type.createText(option, query, true);
-          if (!bestIllegalResult || text.length < text) {
+          if (!bestIllegalResult || text.length < bestIllegalResultText.length) {
             bestIllegalResult = new QueryResult(query, option);
             bestIllegalResultText = text;
           }
@@ -1260,6 +1324,8 @@ export default class WorkspaceQuerier {
     for (const result of results) if (checkValidity(result.token)) validResults.push(result);
 
     validResults = validResults.sort((a, b) => {
+      const caseDifference = a.getCaseMismatchCount() - b.getCaseMismatchCount();
+      if (caseDifference !== 0) return caseDifference;
       const aLengths = a.getLengths();
       const bLengths = b.getLengths();
       if (aLengths.stringLength != bLengths.stringLength) return aLengths.stringLength - bLengths.stringLength;
@@ -1368,6 +1434,10 @@ export default class WorkspaceQuerier {
    * @private
    */
   _populateTokenGroups(blocks) {
+    // Provider ordering is private parser state. Do not reorder the catalogue
+    // array supplied by the caller while arranging recursive operators.
+    blocks = [...blocks];
+
     // Apply order of operations
     for (const block of blocks) {
       block.precedence = WorkspaceQuerier.ORDER_OF_OPERATIONS.indexOf(block.id);
@@ -1376,7 +1446,11 @@ export default class WorkspaceQuerier {
       const block = blocks[i];
       if (block.precedence !== -1) {
         const target = blocks.length - (WorkspaceQuerier.ORDER_OF_OPERATIONS.length - (block.precedence - 1));
-        if (i !== target) {
+        // A focused catalogue may contain fewer entries than the complete
+        // Scratch flyout. In that case there is no reserved operator position;
+        // retaining its supplied position is safe and avoids inserting an
+        // undefined provider into the index.
+        if (target >= 0 && target < blocks.length && i !== target) {
           const oldBlock = blocks[target];
           blocks[target] = block;
           blocks[i] = oldBlock;

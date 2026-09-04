@@ -26,6 +26,21 @@ const findTopBlock = payload => {
     return blocks.find(i => i.topLevel);
 };
 
+const backpackScriptSource = item => {
+    if (!item || item.type !== 'script' || (typeof item.id !== 'string' && typeof item.id !== 'number')) {
+        return null;
+    }
+    return {
+        kind: 'backpack-script',
+        item: {
+            id: String(item.id),
+            type: 'script',
+            name: typeof item.name === 'string' ? item.name : 'code',
+            ...(typeof item.bodyMD5 === 'string' ? {bodyMD5: item.bodyMD5} : {})
+        }
+    };
+};
+
 const placeInViewport = (payload, workspaceMetrics, isRtl) => {
     const topBlock = findTopBlock(payload);
     if (topBlock) {
@@ -51,6 +66,7 @@ const placeInViewport = (payload, workspaceMetrics, isRtl) => {
 };
 
 export {
+    backpackScriptSource,
     codePayload as default,
     findTopBlock,
     placeInViewport

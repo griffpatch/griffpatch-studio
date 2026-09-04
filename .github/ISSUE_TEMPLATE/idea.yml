@@ -1,0 +1,16 @@
+name: Suggest an improvement
+description: A practical idea for Griffpatch Studio's editor.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please search existing suggestions first. This is public: do not include personal information or private projects.
+        Suggestions are welcome, but are not a promise of implementation or personal support.
+        Only use GitHub if you meet its account requirements; otherwise ask a parent or teacher to help.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to do, and why?
+      description: Describe the editing problem and how your idea would help.
+    validations:
+      required: true

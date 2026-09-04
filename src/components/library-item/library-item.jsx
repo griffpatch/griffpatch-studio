@@ -57,6 +57,7 @@ class LibraryItemComponent extends React.PureComponent {
                     typeof this.props.extensionId === 'string' ? styles.libraryItemExtension : null,
                     this.props.hidden ? styles.hidden : null
                 )}
+                data-studio-library-key={this.props.studioItemKey}
                 onClick={this.props.onClick}
             >
                 <div className={styles.featuredImageContainer}>
@@ -211,6 +212,7 @@ class LibraryItemComponent extends React.PureComponent {
                         [styles.hidden]: this.props.hidden
                     }
                 )}
+                data-studio-library-key={this.props.studioItemKey}
                 role="button"
                 tabIndex="0"
                 onBlur={this.props.onBlur}
@@ -291,7 +293,8 @@ LibraryItemComponent.propTypes = {
     onMouseLeave: PropTypes.func.isRequired,
     onPlay: PropTypes.func.isRequired,
     onStop: PropTypes.func.isRequired,
-    showPlayButton: PropTypes.bool
+    showPlayButton: PropTypes.bool,
+    studioItemKey: PropTypes.string
 };
 
 LibraryItemComponent.defaultProps = {

@@ -81,6 +81,7 @@ const cloudManagerHOC = function (WrappedComponent) {
                 props.username &&
                 props.vm &&
                 props.projectId &&
+                !props.isProjectFromUrl &&
                 props.hasCloudPermission &&
                 !props.cloudVariablesDisabledByUser
             );
@@ -151,6 +152,7 @@ const cloudManagerHOC = function (WrappedComponent) {
                 cloudVariablesDisabledByUser,
                 onSetReduxCloudHost,
                 projectId,
+                isProjectFromUrl,
                 username,
                 hasCloudPermission,
                 isShowingWithId,
@@ -181,6 +183,7 @@ const cloudManagerHOC = function (WrappedComponent) {
         onInvalidUsername: PropTypes.func,
         onShowCloudInfo: PropTypes.func,
         projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        isProjectFromUrl: PropTypes.bool,
         username: PropTypes.string,
         vm: PropTypes.instanceOf(VM).isRequired
     };
@@ -198,6 +201,7 @@ const cloudManagerHOC = function (WrappedComponent) {
             cloudVariablesDisabledByUser: !state.scratchGui.tw.cloud,
             isShowingWithId: getIsShowingWithId(loadingState),
             projectId: state.scratchGui.projectState.projectId,
+            isProjectFromUrl: state.scratchGui.projectState.isProjectFromUrl,
             // if you're editing someone else's project, you can't modify cloud data
             canModifyCloudData: (!state.scratchGui.mode.hasEverEnteredEditor || ownProps.canSave) &&
                 // possible security concern if the program attempts to encode webcam data over cloud variables

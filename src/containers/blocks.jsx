@@ -10,6 +10,7 @@ import VM from 'scratch-vm';
 
 import log from '../lib/log.js';
 import Prompt from './prompt.jsx';
+import ScratchBlocksConfirm from '../components/scratch-blocks-confirm/scratch-blocks-confirm.jsx';
 import BlocksComponent from '../components/blocks/blocks.jsx';
 import ExtensionLibrary from './extension-library.jsx';
 import extensionData from '../lib/libraries/extensions/index.jsx';
@@ -42,8 +43,11 @@ import {
 } from '../reducers/editor-tab';
 import AddonHooks from '../addons/hooks.js';
 import LoadScratchBlocksHOC from '../lib/tw-load-scratch-blocks-hoc.jsx';
-import {findTopBlock} from '../lib/backpack/code-payload.js';
+import {backpackScriptSource, findTopBlock} from '../lib/backpack/code-payload.js';
 import {gentlyRequestPersistentStorage} from '../lib/tw-persistent-storage.js';
+import {attachStudioBlockSession} from '../studio/bridge/studio-block-session';
+import {runStudioProjectOperationSource} from '../studio/bridge/project-operation-capture';
+import {attachKeyboardAuthoring} from '../experiments/keyboard-authoring/controller';
 
 // TW: Strings we add to scratch-blocks are localized here
 const messages = defineMessages({
@@ -106,6 +110,9 @@ class Blocks extends React.Component {
             'handleStatusButtonUpdate',
             'handleOpenSoundRecorder',
             'handlePromptStart',
+            'handleConfirmStart',
+            'handleConfirmCancel',
+            'handleConfirmAccept',
             'handlePromptCallback',
             'handlePromptClose',
             'handleCustomProceduresClose',
@@ -125,11 +132,13 @@ class Blocks extends React.Component {
             'handleEnableProcedureReturns'
         ]);
         this.ScratchBlocks.prompt = this.handlePromptStart;
+        this.ScratchBlocks.confirm = this.handleConfirmStart;
         this.ScratchBlocks.statusButtonCallback = this.handleConnectionModalStart;
         this.ScratchBlocks.recordSoundCallback = this.handleOpenSoundRecorder;
 
         this.state = {
-            prompt: null
+            prompt: null,
+            blocksConfirm: null
         };
         this.onTargetsUpdate = debounce(this.onTargetsUpdate, 100);
         this.toolboxUpdateQueue = [];
@@ -137,6 +146,7 @@ class Blocks extends React.Component {
     componentDidMount () {
         this.ScratchBlocks = VMScratchBlocks(this.props.vm, this.props.useCatBlocks);
         this.ScratchBlocks.prompt = this.handlePromptStart;
+        this.ScratchBlocks.confirm = this.handleConfirmStart;
         this.ScratchBlocks.statusButtonCallback = this.handleConnectionModalStart;
         this.ScratchBlocks.recordSoundCallback = this.handleOpenSoundRecorder;
 
@@ -233,6 +243,7 @@ class Blocks extends React.Component {
     shouldComponentUpdate (nextProps, nextState) {
         return (
             this.state.prompt !== nextState.prompt ||
+            this.state.blocksConfirm !== nextState.blocksConfirm ||
             this.props.isVisible !== nextProps.isVisible ||
             this._renderedToolboxXML !== nextProps.toolboxXML ||
             this.props.extensionLibraryVisible !== nextProps.extensionLibraryVisible ||
@@ -322,6 +333,7 @@ class Blocks extends React.Component {
         const offset = this.workspace.toolbox_.getCategoryScrollOffset();
         this.workspace.updateToolbox(this.props.toolboxXML);
         this._renderedToolboxXML = this.props.toolboxXML;
+        if (this.keyboardAuthoring) this.keyboardAuthoring.toolboxUpdated();
 
         // In order to catch any changes that mutate the toolbox during "normal runtime"
         // (variable changes/etc), re-enable toolbox refresh.
@@ -352,6 +364,19 @@ class Blocks extends React.Component {
 
     attachVM () {
         this.workspace.addChangeListener(this.props.vm.blockListener);
+        this.studioBlockCapture = attachStudioBlockSession({
+            workspace: this.workspace,
+            vm: this.props.vm,
+            ScratchBlocks: this.ScratchBlocks
+        });
+        this.keyboardAuthoring = attachKeyboardAuthoring({
+            workspace: this.workspace,
+            ScratchBlocks: this.ScratchBlocks,
+            vm: this.props.vm,
+            session: this.studioBlockCapture && this.studioBlockCapture.session,
+            isVisible: () => this.props.isVisible,
+            getLocale: () => this.props.locale
+        });
         this.flyoutWorkspace = this.workspace
             .getFlyout()
             .getWorkspace();
@@ -371,6 +396,11 @@ class Blocks extends React.Component {
         this.props.vm.addListener('PERIPHERAL_DISCONNECTED', this.handleStatusButtonUpdate);
     }
     detachVM () {
+        if (this.keyboardAuthoring) this.keyboardAuthoring.detach();
+        if (this.studioBlockCapture) {
+            this.studioBlockCapture.detach();
+            this.studioBlockCapture = null;
+        }
         this.props.vm.removeListener('SCRIPT_GLOW_ON', this.onScriptGlowOn);
         this.props.vm.removeListener('SCRIPT_GLOW_OFF', this.onScriptGlowOff);
         this.props.vm.removeListener('BLOCK_GLOW_ON', this.onBlockGlowOn);
@@ -474,6 +504,7 @@ class Blocks extends React.Component {
         }
 
         // Remove and reattach the workspace listener (but allow flyout events)
+        if (this.studioBlockCapture) this.studioBlockCapture.pause();
         this.workspace.removeChangeListener(this.props.vm.blockListener);
         const dom = this.ScratchBlocks.Xml.textToDom(data.xml);
         try {
@@ -507,6 +538,8 @@ class Blocks extends React.Component {
         // fresh workspace and we don't want any changes made to another sprites
         // workspace to be 'undone' here.
         this.workspace.clearUndo();
+        if (this.studioBlockCapture) this.studioBlockCapture.resume();
+        if (this.keyboardAuthoring) this.keyboardAuthoring.workspaceUpdated();
     }
     handleMonitorsUpdate (monitors) {
         // Update the checkboxes of the relevant monitors.
@@ -602,6 +635,26 @@ class Blocks extends React.Component {
         p.prompt.showCloudOption = (optVarType === this.ScratchBlocks.SCALAR_VARIABLE_TYPE) && this.props.canUseCloud;
         this.setState(p);
     }
+    handleConfirmStart (message, callback) {
+        this.setState({
+            blocksConfirm: {
+                callback,
+                message
+            }
+        });
+    }
+    handleConfirmCancel () {
+        const confirmation = this.state.blocksConfirm;
+        this.setState({blocksConfirm: null}, () => {
+            if (confirmation) confirmation.callback(false);
+        });
+    }
+    handleConfirmAccept () {
+        const confirmation = this.state.blocksConfirm;
+        this.setState({blocksConfirm: null}, () => {
+            if (confirmation) confirmation.callback(true);
+        });
+    }
     handleConnectionModalStart (extensionId) {
         this.props.onOpenConnectionModal(extensionId);
     }
@@ -651,7 +704,11 @@ class Blocks extends React.Component {
                         topBlock.y = (-metrics.scrollY - top + y) / metrics.scale;
                     }
                 }
-                return this.props.vm.shareBlocksToTarget(payload, this.props.vm.editingTarget.id);
+                return runStudioProjectOperationSource(
+                    this.props.vm,
+                    backpackScriptSource(dragInfo.payload),
+                    () => this.props.vm.shareBlocksToTarget(payload, this.props.vm.editingTarget.id)
+                );
             })
             .then(() => {
                 this.props.vm.refreshWorkspace();
@@ -710,6 +767,14 @@ class Blocks extends React.Component {
                         vm={vm}
                         onCancel={this.handlePromptClose}
                         onOk={this.handlePromptCallback}
+                    />
+                ) : null}
+                {this.state.blocksConfirm ? (
+                    <ScratchBlocksConfirm
+                        message={this.state.blocksConfirm.message}
+                        title="Confirm"
+                        onCancel={this.handleConfirmCancel}
+                        onConfirm={this.handleConfirmAccept}
                     />
                 ) : null}
                 {extensionLibraryVisible ? (

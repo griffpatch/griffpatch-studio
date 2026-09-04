@@ -1,6 +1,9 @@
 // import ShowBroadcast from "./show-broadcast.js";
 import DomHelpers from "./DomHelpers.js";
 import UndoGroup from "./UndoGroup.js";
+import {getScriptContext} from "../../libraries/common/cs/script-context.js";
+import {captureScriptViewportAnchor} from "../../libraries/common/cs/script-viewport-anchor.js";
+import {createLayoutTransaction} from "../../libraries/common/cs/layout-transaction.js";
 
 export default class DevTools {
   constructor(addon, msg, m) {
@@ -38,13 +41,22 @@ export default class DevTools {
   }
   async addContextMenus() {
     const blockly = await this.addon.tab.traps.getBlockly();
+    this.blockly = blockly;
     const oldCleanUpFunc = blockly.WorkspaceSvg.prototype.cleanUp;
     const self = this;
+    // Optional structural editors can request the same layout without the
+    // unrelated orphan/unused-variable deletion workflow of the menu action.
+    blockly.WorkspaceSvg.prototype.cleanUpPlusLayout = function (anchorBlock) {
+      if (!self.addon.settings.get("enableCleanUpPlus")) return false;
+      self.doCleanUp(null, {layoutOnly: true, anchorBlock});
+      return true;
+    };
     blockly.WorkspaceSvg.prototype.cleanUp = function () {
       if (self.addon.settings.get("enableCleanUpPlus")) {
         self.doCleanUp();
       } else {
-        oldCleanUpFunc.call(this);
+        const restore = captureScriptViewportAnchor(this, self.activeScript(this));
+        try { oldCleanUpFunc.call(this); } finally { restore(); }
       }
     };
 
@@ -63,6 +75,11 @@ export default class DevTools {
           separator: true,
           _isDevtoolsFirstItem: true,
           callback: () => {
+            // Optional editor modes can own placement without replacing the
+            // native clipboard or changing the mouse-mode default.
+            if (!this.getWorkspace().getCanvas().dispatchEvent(new CustomEvent(
+              "scratch-addons-block-paste", { cancelable: true }
+            ))) return;
             let ids = this.getTopBlockIDs();
 
             document.dispatchEvent(
@@ -191,16 +208,24 @@ export default class DevTools {
   /**
    * A much nicer way of laying out the blocks into columns
    */
-  doCleanUp(block) {
+  activeScript(workspace) {
+    const vm = this.addon?.tab.traps.vm;
+    const location = vm && getScriptContext(vm).get(vm.editingTarget?.id);
+    return workspace.getBlockById(location?.blockId) || workspace.getBlockById(location?.rootId) ||
+      (this.blockly?.selected?.workspace === workspace ? this.blockly.selected : null);
+  }
+
+  doCleanUp(block, {layoutOnly = false, anchorBlock = null} = {}) {
     let workspace = this.getWorkspace();
+    const targetId = this.addon?.tab.traps.vm.editingTarget?.id;
+    const transaction = createLayoutTransaction(workspace, this.blockly, () => this.activeScript(workspace));
     let makeSpaceForBlock = block && block.getRootBlock();
-
-    UndoGroup.startUndoGroup(workspace);
-
+    try { transaction.run(() => {
     let result = this.getOrderedTopBlockColumns(true);
     let columns = result.cols;
     let orphanCount = result.orphans.blocks.length;
-    if (orphanCount > 0 && !block) {
+    if (orphanCount > 0 && layoutOnly) columns.unshift(result.orphans);
+    if (orphanCount > 0 && !block && !layoutOnly) {
       let message = this.msg("orphaned", {
         count: orphanCount,
       });
@@ -247,9 +272,18 @@ export default class DevTools {
       }
     }
 
+    }, anchorBlock || block || this.activeScript(workspace));
+    } catch (error) { transaction.finish(); throw error; }
+    if (layoutOnly) {
+      transaction.finish();
+      return;
+    }
     setTimeout(() => {
+      if (this.getWorkspace() !== workspace || this.addon?.tab.traps.vm.editingTarget?.id !== targetId) {
+        transaction.finish(); return;
+      }
+      try { transaction.run(() => {
       // Locate unused local variables...
-      let workspace = this.getWorkspace();
       let map = workspace.getVariableMap();
       let vars = map.getVariablesOfType("");
       let unusedLocals = [];
@@ -313,7 +347,7 @@ export default class DevTools {
         }
       }
 
-      UndoGroup.endUndoGroup(workspace);
+      }); } finally { transaction.finish(); }
     }, 100);
   }
 
@@ -591,6 +625,12 @@ export default class DevTools {
     }
     let wksp = this.getWorkspace();
     let topBlocks = wksp.getTopBlocks();
+    if (!topBlocks.some((block) => !ids.has(block.id))) return;
+    // Consult the current owner at execution time: a key listener may have
+    // scheduled this callback before another handler accepted the paste.
+    if (!wksp.getCanvas().dispatchEvent(new CustomEvent(
+      "scratch-addons-before-paste-drag", { cancelable: true }
+    ))) return;
     for (const block of topBlocks) {
       if (!ids.has(block.id)) {
         // console.log("I found a new block!!! - " + block.id);

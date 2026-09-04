@@ -345,7 +345,15 @@ export class BlockTypeInfo {
     if (block.type === "procedures_call") {
       if (vm.getAddonBlock(block.getProcCode())) name = "addon-custom-block";
       else name = "more";
-    } else if (block.usesDefaultExtensionColors) name = "pen";
+    } else if (block.usesDefaultExtensionColors) {
+      // Scratch Addons originally only needed a badge for Pen. TurboWarp can
+      // add many live extensions which share the same default colours, so the
+      // colour flag is not a category identity. Resolve the extension from the
+      // same extended opcode used by the VM and keep its localized live name.
+      const extensionId = String(block.type || "").split("_")[0];
+      const extensionInfo = vm?.runtime?._blockInfo?.find(info => info.id === extensionId);
+      name = extensionInfo?.name || extensionId || "extension";
+    }
     else if (block.type === "sensing_of") name = "sensing";
     else if (block.type === "event_whenbackdropswitchesto") name = "events";
     else name = block.category_;
@@ -364,9 +372,10 @@ export class BlockTypeInfo {
    * @param {*} vm
    * @param {*} workspace
    * @param {(string) => string} locale The translations used for converting icons into text
+   * @param {object} options Optional catalogue capabilities; native menus are never modified
    * @returns {BlockTypeInfo[]}
    */
-  static getBlocks(Blockly, vm, workspace, locale) {
+  static getBlocks(Blockly, vm, workspace, locale, options = {}) {
     const flyoutWorkspace = workspace.getToolbox()?.flyout_.getWorkspace();
     if (!flyoutWorkspace) return [];
 
@@ -388,7 +397,8 @@ export class BlockTypeInfo {
           Blockly,
           locale,
           workspaceBlock,
-          flyoutDomBlockMap[workspaceBlock.id]
+          flyoutDomBlockMap[workspaceBlock.id],
+          options
         )
       );
     }
@@ -396,7 +406,7 @@ export class BlockTypeInfo {
     return blocks;
   }
 
-  static _createBlocks(workspace, vm, Blockly, locale, workspaceForm, domForm) {
+  static _createBlocks(workspace, vm, Blockly, locale, workspaceForm, domForm, options = {}) {
     let parts = [];
     let inputs = [];
 
@@ -406,7 +416,10 @@ export class BlockTypeInfo {
     };
 
     const addFieldInputs = (field, inputIdx, fieldIdx) => {
-      if (field.className_ === "blocklyText blocklyDropdownText") {
+      // Field identity also works before its SVG view is initialized. Styling
+      // classes are added by rendering, so they cannot identify a headless
+      // native template used to propose the very first variable command.
+      if (field instanceof Blockly.FieldDropdown) {
         const options = field.getOptions();
         addInput(new BlockInputEnum(options, inputIdx, fieldIdx, fieldIdx === -1));
       } else if (field instanceof Blockly.FieldImage) {
@@ -495,7 +508,16 @@ export class BlockTypeInfo {
         [Blockly.Msg.SENSING_OF_VOLUME, "volume"],
       ];
 
-      for (const targetInput of baseTargetInput.values) {
+      const targetOptions = [...baseTargetInput.values];
+      // Scratch's menu omits the editing sprite, but the native reporter can
+      // explicitly address that original sprite from one of its clones. Only
+      // opt-in catalogues expose it; reuse every existing property/scope rule.
+      const current = options.includeCurrentSprite && vm.editingTarget;
+      const currentName = current && !current.isStage && current.getName();
+      if (currentName && !targetOptions.some((option) => option.value === currentName)) {
+        targetOptions.push({string: currentName, value: currentName});
+      }
+      for (const targetInput of targetOptions) {
         let options;
         const isStage = targetInput.value === "_stage_";
 

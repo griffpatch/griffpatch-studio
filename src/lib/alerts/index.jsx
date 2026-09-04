@@ -245,7 +245,7 @@ const alerts = [
                 values={{
                     learnMoreLink: (
                         <a
-                            href="https://scratch.mit.edu/info/faq/#clouddata"
+                            href="https://docs.turbowarp.org/cloud-variables"
                             rel="noopener noreferrer"
                             target="_blank"
                         >

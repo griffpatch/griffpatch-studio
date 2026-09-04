@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './invalid-embed.css';
-import {APP_NAME} from '../../lib/brand';
+import {APP_NAME, APP_FEEDBACK_PATH} from '../../lib/brand';
 
 // Note that when this component is used, the rest of scratch-gui is not being run, so don't
 // use redux, themes, translations, etc.
@@ -33,13 +33,13 @@ const InvalidEmbed = () => (
             {`<iframe src="https://turbowarp.org/60917032/embed" width="482" height="412" allowtransparency="true" frameborder="0" scrolling="no" allowfullscreen></iframe>`}
         </p>
         <p>
-            {'If you are seeing this page even though you aren\'t embedding anything, let us know on '}
+            {'If you are seeing this page even though you aren\'t embedding anything, see the '}
             <a
-                href="https://scratch.mit.edu/users/GarboMuffin/#comments"
+                href={`${process.env.ROOT}${APP_FEEDBACK_PATH}`}
                 target="_blank"
                 rel="noreferrer"
             >
-                {'scratch.mit.edu/users/GarboMuffin'}
+                {'preview feedback page'}
             </a>
             {'.'}
         </p>

@@ -1,8 +1,11 @@
 jest.setTimeout(30000); // eslint-disable-line no-undef
 
 import bindAll from 'lodash.bindall';
-import 'chromedriver'; // register path
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import webdriver from 'selenium-webdriver';
+import chrome from 'selenium-webdriver/chrome';
 
 const {Button, By, until} = webdriver;
 
@@ -52,7 +55,7 @@ const enhanceError = async (outerError, cause, driver) => {
 };
 
 class SeleniumHelper {
-    constructor () {
+    constructor ({windowWidth = 1024, windowHeight = 768} = {}) {
         bindAll(this, [
             'clickText',
             'clickButton',
@@ -75,6 +78,8 @@ class SeleniumHelper {
         // this type declaration suppresses IDE type warnings throughout this file
         /** @type {webdriver.ThenableWebDriver} */
         this.driver = null;
+        this.windowWidth = windowWidth;
+        this.windowHeight = windowHeight;
     }
 
     /**
@@ -124,10 +129,18 @@ class SeleniumHelper {
      * @returns {webdriver.ThenableWebDriver} The new driver.
      */
     getDriver () {
-        const chromeCapabilities = webdriver.Capabilities.chrome();
         const args = [];
+        // Never let an integration test inherit or lock the user's real Chrome
+        // profile. This is also required on managed Windows hosts where the
+        // ordinary profile directory is deliberately unavailable to test jobs.
+        const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'scratch-gui-selenium-'));
+        args.push(`--user-data-dir=${userDataDir}`);
         if (USE_HEADLESS) {
-            args.push('--headless');
+            args.push('--headless=new');
+            // Current headless Chrome may ignore a WebDriver window resize
+            // after launch. Set the intended viewport before the editor first
+            // renders; loadUri still repeats the size for headed browsers.
+            args.push(`--window-size=${this.windowWidth},${this.windowHeight}`);
         }
 
         // Stub getUserMedia to always not allow access
@@ -137,14 +150,88 @@ class SeleniumHelper {
         // This is especially important on Windows, where Selenium directs JS console messages to stdout
         args.push('--autoplay-policy=no-user-gesture-required');
 
-        chromeCapabilities.set('chromeOptions', {args});
-        chromeCapabilities.setLoggingPrefs({
-            performance: 'ALL'
-        });
-        this.driver = new webdriver.Builder()
+        const chromeOptions = new chrome.Options();
+        chromeOptions.addArguments(...args);
+        const builder = new webdriver.Builder()
             .forBrowser('chrome')
-            .withCapabilities(chromeCapabilities)
-            .build();
+            .setChromeOptions(chromeOptions)
+            .setLoggingPrefs({performance: 'ALL'});
+        if (process.env.CHROMEDRIVER_PATH) {
+            // Preserve an explicit offline/CI driver override. Otherwise
+            // Selenium Manager resolves and caches a driver compatible with
+            // the locally installed Chrome version.
+            builder.setChromeService(new chrome.ServiceBuilder(process.env.CHROMEDRIVER_PATH));
+        }
+        this.driver = builder.build();
+        const quit = this.driver.quit.bind(this.driver);
+        this.driver.quit = async () => {
+            try {
+                await quit();
+            } finally {
+                try {
+                    fs.rmSync(userDataDir, {recursive: true, force: true, maxRetries: 5, retryDelay: 100});
+                } catch (error) { // A late Chrome child must not hide the test result.
+                    // The OS temporary directory will reclaim this disposable profile.
+                }
+            }
+        };
+
+        // Keep the existing integration suite's Selenium 3 pointer-action
+        // vocabulary while running on Selenium 4. This is deliberately
+        // centralized so individual browser scenarios keep describing the
+        // same gestures and can migrate independently.
+        const actions = this.driver.actions.bind(this.driver);
+        this.driver.actions = options => {
+            const queued = [];
+            const adapter = {};
+            const queue = name => (...args) => {
+                queued.push({name, args});
+                return adapter;
+            };
+            for (const name of [
+                'mouseMove', 'mouseDown', 'mouseUp',
+                'move', 'press', 'release', 'click', 'contextClick', 'doubleClick',
+                'keyDown', 'keyUp', 'sendKeys', 'pause', 'dragAndDrop', 'scroll'
+            ]) {
+                adapter[name] = queue(name);
+            }
+            adapter.perform = async () => {
+                const sequence = actions(options);
+                for (const action of queued) {
+                    const [first, second] = action.args;
+                    if (action.name === 'mouseMove') {
+                        if (!second) {
+                            sequence.move({origin: first});
+                            continue;
+                        }
+                        const rect = await first.getRect();
+                        sequence.move({
+                            origin: first,
+                            x: Math.round((second.x || 0) - (rect.width / 2)),
+                            y: Math.round((second.y || 0) - (rect.height / 2))
+                        });
+                        continue;
+                    }
+                    if (action.name === 'mouseDown') {
+                        sequence.press(first);
+                        continue;
+                    }
+                    if (action.name === 'mouseUp') {
+                        sequence.release(first);
+                        continue;
+                    }
+                    if (action.name === 'click') {
+                        if (first) sequence.move({origin: first});
+                        const button = second === undefined ? webdriver.Button.LEFT : second;
+                        sequence.press(button).release(button);
+                        continue;
+                    }
+                    sequence[action.name](...action.args);
+                }
+                return sequence.perform();
+            };
+            return adapter;
+        };
         return this.driver;
     }
 
@@ -235,14 +322,13 @@ class SeleniumHelper {
         const outerError = new Error(`loadUri failed with arguments:\n\turi: ${uri}`);
         try {
             await this.setTitle(`loadUri ${uri}`);
-            const WINDOW_WIDTH = 1024;
-            const WINDOW_HEIGHT = 768;
+            const destination = /^https?:\/\//.test(uri) ? uri : `file://${uri}`;
             await this.driver
-                .get(`file://${uri}`);
+                .get(destination);
             await this.driver
                 .executeScript('window.onbeforeunload = undefined;');
             await this.driver.manage().window()
-                .setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+                .setRect({width: this.windowWidth, height: this.windowHeight});
             await this.driver.wait(
                 async () => await this.driver.executeScript('return document.readyState;') === 'complete',
                 DEFAULT_TIMEOUT_MILLISECONDS

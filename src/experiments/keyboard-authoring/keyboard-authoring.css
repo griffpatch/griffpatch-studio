@@ -1,0 +1,162 @@
+.root {
+    /* Do not trap the workspace caret in the composition panel's higher
+       stacking context: native/Finder menus must paint over it normally. */
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--text-primary);
+}
+.root [hidden] { display: none !important; }
+.bar {
+    position: fixed;
+    z-index: 510;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--ui-modal-background);
+    border: 1px solid var(--ui-tertiary);
+    border-radius: 10px;
+    padding: 6px 10px 6px 6px;
+    box-shadow: 0 3px 14px var(--shadow);
+    pointer-events: auto;
+}
+.bar button {
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+    border: 1px solid var(--ui-tertiary);
+    border-radius: 7px;
+    padding: 6px 11px;
+    background: var(--ui-primary);
+    color: var(--text-primary);
+}
+.bar button[aria-pressed="true"] {
+    background: var(--looks-secondary);
+    color: white;
+    border-color: transparent;
+}
+.bar .helpTrigger { font-size: 12px; font-weight: 400; border-color: transparent; background: transparent; opacity: .8; padding: 6px 2px; }
+.bar .helpTrigger:hover { opacity: 1; text-decoration: underline; }
+.bar[data-compact="true"] .helpTrigger { max-width: 36px; overflow: hidden; white-space: nowrap; }
+.keyboardHelp {
+    pointer-events: auto;
+    box-sizing: border-box;
+    width: min(760px, calc(100vw - 32px));
+    max-height: calc(100dvh - 48px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 28px;
+    border: 1px solid var(--ui-tertiary);
+    border-radius: 16px;
+    background: var(--ui-modal-background);
+    color: var(--text-primary);
+    font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    box-shadow: 0 12px 48px var(--shadow);
+}
+.keyboardHelp::backdrop { background: rgba(0, 0, 0, .35); }
+.keyboardHelp[open] { display: flex; flex-direction: column; height: min(500px, calc(100dvh - 48px)); overflow: hidden; }
+.keyboardHelp [role="tablist"] { display: flex; gap: 4px; flex-shrink: 0; overflow-x: auto; margin-bottom: 18px; border-bottom: 1px solid var(--ui-tertiary); }
+.keyboardHelp [role="tab"] { padding: 8px 10px; white-space: nowrap; background: transparent; color: var(--text-primary); border-radius: 6px 6px 0 0; font-size: 13px; border-bottom: 3px solid transparent; }
+.keyboardHelp [role="tab"][aria-selected="true"] { border-bottom-color: var(--looks-secondary); background: var(--ui-primary); }
+.keyboardHelp [role="tabpanel"] { overflow-y: auto; min-height: 0; flex: 1; padding: 3px 8px 3px 3px; }
+.keyboardHelp footer { flex-shrink: 0; text-align: right; padding-top: 16px; }
+.keyboardHelp h2 { font-size: 23px; line-height: 1.25; margin: 0 0 12px; }
+.keyboardHelp h3 { font-size: 16px; margin: 26px 0 12px; }
+.keyboardHelp p { margin: 0 0 16px; }
+.keyboardHelp dl { display: grid; grid-template-columns: minmax(140px, 1fr) 2.4fr; gap: 12px 20px; margin: 0; }
+.keyboardHelp dt { font-weight: 600; }
+.keyboardHelp dd { margin: 0; }
+.keyboardHelp button { font: inherit; font-weight: 600; cursor: pointer; padding: 8px 20px; border: 0; border-radius: 8px; background: var(--looks-secondary); color: white; }
+.keyboardHelp button:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 3px; }
+@media (max-width: 520px) {
+    .keyboardHelp { padding: 20px; }
+    .keyboardHelp dl { grid-template-columns: 1fr; gap: 4px; }
+    .keyboardHelp dd { margin-bottom: 12px; }
+}
+.bar button:focus-visible, .input:focus { outline: 2px solid var(--looks-secondary); outline-offset: 2px; }
+.surface { position: fixed; width: 1px; height: 1px; outline: none; }
+.caret {
+    position: fixed;
+    z-index: 45;
+}
+.columnCue {
+    position: fixed;
+    z-index: 45;
+    color: var(--text-primary);
+    font-size: 26px;
+    line-height: 28px;
+    opacity: .7;
+}
+.caret svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 1px .4px rgba(0, 0, 0, .5));
+}
+.caret [data-caret-paths] > path {
+    fill: none;
+    stroke: #df244b;
+    stroke-width: 3px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-dasharray: 5 7;
+    vector-effect: non-scaling-stroke;
+    animation: outline-flow 3s linear infinite;
+}
+.caret[data-range-contour="silhouette"] [data-caret-paths] > path { stroke-width: 8px; }
+.caret[data-empty="true"] [data-caret-paths] > path[data-source] {
+    fill: #ff4d5a;
+    fill-opacity: .12;
+}
+.keyboardCanvas :global(.blocklyDraggable):not(:global(.blocklyDragging)):not(:active) {
+    /* Click selects a node in this mode. Native mouse-down and dragging keep
+       Blockly's grabbing cursor; palette blocks and comments are unchanged. */
+    cursor: pointer;
+}
+:global(.blocklyDraggable).hoveredBlock > :global(.blocklyPath) {
+    /* Lift the existing theme colour, without a second outline or recolouring
+       labels, inputs, descendants, or the native stack-running glow. */
+    filter: brightness(1.12);
+}
+.draft {
+    z-index: 510;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 310px;
+    pointer-events: auto;
+    padding: 9px;
+    border: 1px solid var(--ui-tertiary);
+    border-radius: 10px;
+    background: var(--ui-modal-background);
+    box-shadow: 0 10px 30px var(--shadow);
+}
+.input {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 14px;
+    border: 1px solid var(--ui-tertiary);
+    border-radius: 6px;
+    color: var(--text-primary);
+    background: var(--input-background);
+    caret-color: var(--looks-secondary);
+}
+.list { margin-top: 7px; max-height: 220px; min-height: 0; overflow-y: auto; }
+.draft[data-placement="above"] .input { order: 2; }
+.draft[data-placement="above"] .list { margin-top: 0; margin-bottom: 7px; }
+.draft[data-placement="above"] .help { order: 1; padding-top: 0; padding-bottom: 7px; }
+.option { padding: 7px 9px; border-radius: 6px; cursor: pointer; }
+.option[aria-selected="true"] { background: var(--looks-transparent); box-shadow: inset 3px 0 var(--looks-secondary); }
+.option[aria-disabled="true"] { opacity: .65; }
+.option span { display: block; opacity: .65; font-size: 11px; }
+.help { flex-shrink: 0; padding: 7px 3px 0; font-size: 11px; opacity: .75; }
+.scopePreference { display: flex; flex-shrink: 0; align-items: center; gap: 6px; margin-top: 6px; font-size: 11px; }
+.scopePreference select { min-width: 0; flex: 1; font: inherit; color: var(--text-primary); background: var(--input-background); border: 1px solid var(--ui-tertiary); border-radius: 4px; padding: 3px; }
+.announcement { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@keyframes outline-flow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -24; } }
+@media (prefers-reduced-motion: reduce) { .caret [data-caret-paths] > path { animation: none; } }

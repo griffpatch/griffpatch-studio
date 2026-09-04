@@ -23,7 +23,6 @@ const CustomProcedures = props => (
         className={styles.modalContent}
         contentLabel={props.intl.formatMessage(messages.myblockModalTitle)}
         onRequestClose={props.onCancel}
-        id="customProceduresModal"
     >
         <Box
             className={styles.workspace}
@@ -33,6 +32,7 @@ const CustomProcedures = props => (
             <div className={styles.optionsRow}>
                 <div
                     className={styles.optionCard}
+                    data-studio-target="custom-procedure-add-text-number"
                     role="button"
                     tabIndex="0"
                     onClick={props.onAddTextNumber}
@@ -59,6 +59,7 @@ const CustomProcedures = props => (
                 </div>
                 <div
                     className={styles.optionCard}
+                    data-studio-target="custom-procedure-add-boolean"
                     role="button"
                     tabIndex="0"
                     onClick={props.onAddBoolean}
@@ -85,6 +86,7 @@ const CustomProcedures = props => (
                 </div>
                 <div
                     className={styles.optionCard}
+                    data-studio-target="custom-procedure-add-label"
                     role="button"
                     tabIndex="0"
                     onClick={props.onAddLabel}
@@ -107,6 +109,7 @@ const CustomProcedures = props => (
                 <label>
                     <input
                         checked={props.warp}
+                        data-studio-target="custom-procedure-warp"
                         type="checkbox"
                         onChange={props.onToggleWarp}
                     />
@@ -120,6 +123,7 @@ const CustomProcedures = props => (
             <Box className={styles.buttonRow}>
                 <button
                     className={styles.cancelButton}
+                    data-studio-target="custom-procedure-cancel"
                     onClick={props.onCancel}
                 >
                     <FormattedMessage
@@ -130,6 +134,7 @@ const CustomProcedures = props => (
                 </button>
                 <button
                     className={styles.okButton}
+                    data-studio-target="custom-procedure-ok"
                     onClick={props.onOk}
                 >
                     <FormattedMessage

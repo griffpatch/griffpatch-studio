@@ -48,6 +48,8 @@ export default {
   "block-switching": () => import(/* webpackChunkName: "addon-default-entry" */ "../addons/block-switching/_runtime_entry.js"),
   "load-extensions": () => import(/* webpackChunkName: "addon-entry-load-extensions" */ "../addons/load-extensions/_runtime_entry.js"),
   "custom-zoom": () => import(/* webpackChunkName: "addon-entry-custom-zoom" */ "../addons/custom-zoom/_runtime_entry.js"),
+  "workspace-minimap": () => import(/* webpackChunkName: "addon-entry-workspace-minimap" */ "../addons/workspace-minimap/_runtime_entry.js"),
+  "script-breadcrumb": () => import(/* webpackChunkName: "addon-entry-script-breadcrumb" */ "../addons/script-breadcrumb/_runtime_entry.js"),
   "copy-reporter": () => import(/* webpackChunkName: "addon-entry-copy-reporter" */ "../addons/copy-reporter/_runtime_entry.js"),
   "initialise-sprite-position": () => import(/* webpackChunkName: "addon-entry-initialise-sprite-position" */ "../addons/initialise-sprite-position/_runtime_entry.js"),
   "blocks2image": () => import(/* webpackChunkName: "addon-entry-blocks2image" */ "../addons/blocks2image/_runtime_entry.js"),

@@ -1,8 +1,9 @@
 name: CI
 
 on:
-  push:
-  pull_request:
+  # Keep the inherited recipe available, but do not automatically run a build
+  # that omits Studio's pinned modified Blocks. See README for the verified build.
+  workflow_dispatch:
 
 jobs:
   build:

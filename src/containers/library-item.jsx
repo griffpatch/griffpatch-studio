@@ -164,6 +164,7 @@ class LibraryItem extends React.PureComponent {
                 favorite={this.props.favorite}
                 onFavorite={this.handleFavorite}
                 showPlayButton={this.props.showPlayButton}
+                studioItemKey={this.props.studioItemKey}
                 onBlur={this.handleBlur}
                 onClick={this.handleClick}
                 onFocus={this.handleFocus}
@@ -217,6 +218,7 @@ LibraryItem.propTypes = {
         text: PropTypes.string
     })),
     favorite: PropTypes.bool,
+    studioItemKey: PropTypes.string,
     onFavorite: PropTypes.func,
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,

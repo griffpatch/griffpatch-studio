@@ -15,6 +15,7 @@ class CustomProcedures extends React.Component {
             'handleAddTextNumber',
             'handleToggleWarp',
             'handleCancel',
+            'handleKeyDown',
             'handleOk',
             'setBlocks'
         ]);
@@ -23,7 +24,15 @@ class CustomProcedures extends React.Component {
             warp: false
         };
     }
+    componentDidMount () {
+        // Blockly's inline declaration fields consume Escape before the outer
+        // React modal can see it. Capture it at the dialog boundary so Escape
+        // always means Cancel, even while a custom-block name or label owns
+        // keyboard focus.
+        document.addEventListener('keydown', this.handleKeyDown, true);
+    }
     componentWillUnmount () {
+        document.removeEventListener('keydown', this.handleKeyDown, true);
         if (this.workspace) {
             this.workspace.dispose();
         }
@@ -112,6 +121,12 @@ class CustomProcedures extends React.Component {
     }
     handleCancel () {
         this.props.onRequestClose();
+    }
+    handleKeyDown (event) {
+        if (event.key !== 'Escape') return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        this.handleCancel();
     }
     handleOk () {
         const newMutation = this.mutationRoot ? this.mutationRoot.mutationToDom(true) : null;

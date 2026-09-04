@@ -1,0 +1,175 @@
+[
+  {
+    "location": "node_modules/omggif",
+    "version": "1.0.9",
+    "license": "MIT",
+    "note": "Full permission and copyright notice in original source header; package manifest lacks a licence field.",
+    "notices": [
+      {
+        "file": "omggif.js",
+        "startLine": 1,
+        "endLine": 21,
+        "sha256": "bd898d5b7e43038c7b4c26bf1e1057fe23a44f90312469d802a4e7caf3ae3b12"
+      }
+    ]
+  },
+  {
+    "location": "node_modules/keymirror",
+    "version": "0.1.1",
+    "license": "Apache-2.0",
+    "note": "Original Facebook copyright and Apache header. The final distribution must also include full Apache-2.0 terms; this header alone is not a replacement for those terms.",
+    "notices": [
+      {
+        "file": "index.js",
+        "startLine": 1,
+        "endLine": 16,
+        "sha256": "611ada9df09f2212f048fde201ada7ad30ff3ce348453289579cb9e2f6c367e3"
+      }
+    ]
+  },
+  {
+    "location": "node_modules/isarray",
+    "version": "1.0.0",
+    "license": "MIT",
+    "note": "Full licence section from packaged README, preserving its original Markdown and copyright spelling.",
+    "notices": [
+      {
+        "file": "README.md",
+        "startLine": 38,
+        "endLine": 60,
+        "sha256": "ff138e683771b187f3629c383db72ee7d632009010a36d08e18e8d2a34222ec7"
+      }
+    ]
+  },
+  {
+    "location": "node_modules/color-convert",
+    "version": "0.5.3",
+    "license": "MIT",
+    "note": "MIT terms and Heather Arthur copyright in packaged LICENSE establish the missing manifest declaration; original manifest is unchanged.",
+    "notices": [
+      {
+        "file": "LICENSE",
+        "startLine": 1,
+        "endLine": 21,
+        "sha256": "8984783ab2478bbee455f0eb6c375b5b62c57c86d4a55f6bf96dfd08e8d48a10"
+      }
+    ]
+  },
+  {
+    "location": "node_modules/format-message-formats",
+    "version": "6.2.4",
+    "license": "MIT",
+    "note": "Repository-root licence at npm gitHead; registry tarball integrity matched the installed lockfile. This is notice evidence, not complete source delivery.",
+    "integrity": "sha512-smT/fAqBLqusWfWCKRAx6QBDAAbmYznWsIyTyk66COmvwt2Byiqd7SJe2ma9a5oV0kwRaOJpN/F4lr4YK/n6qQ==",
+    "packageManifestSha256": "a7eac8985f300aac400c3fb90bfc606a11e3162aa3c3eb1fccc404854caaa0dc",
+    "metadataUrl": "https://registry.npmjs.org/format-message-formats/6.2.4",
+    "metadataSha256": "451179f3690f58c3079c067e2a2b60ca3678703f1ae9ff742b877a865a92e9cb",
+    "notices": [
+      {
+        "upstream": {
+          "url": "https://raw.githubusercontent.com/format-message/format-message/ece4dfacbec6af56e98897a3acbf0c99c64c2ed2/LICENSE-MIT",
+          "sha256": "60a3946f201f9fa04ad5b02f24c5d92f07ccfdee3948900723c70ca23e4055fd",
+          "text": "Copyright (c) 2015 Andy VanWagoner\n\nPermission is hereby granted, free of charge, to any person\nobtaining a copy of this software and associated documentation\nfiles (the \"Software\"), to deal in the Software without\nrestriction, including without limitation the rights to use,\ncopy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the\nSoftware is furnished to do so, subject to the following\nconditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES\nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\nHOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nWHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\nOTHER DEALINGS IN THE SOFTWARE.\n",
+          "revision": "ece4dfacbec6af56e98897a3acbf0c99c64c2ed2"
+        }
+      }
+    ]
+  },
+  {
+    "location": "node_modules/format-message-interpret",
+    "version": "6.2.4",
+    "license": "MIT",
+    "note": "Repository-root licence at npm gitHead; registry tarball integrity matched the installed lockfile. This is notice evidence, not complete source delivery.",
+    "integrity": "sha512-dRvz9mXhITApyOtfuFEb/XqvCe1u6RMkQW49UJHXS8w2S8cAHCqq5LNDFK+QK6XVzcofROycLb/k1uybTAKt2w==",
+    "packageManifestSha256": "e1feb28c89afadbcdc134d3d5ec287af599fcbd397fe5d2aa9277b9182406398",
+    "metadataUrl": "https://registry.npmjs.org/format-message-interpret/6.2.4",
+    "metadataSha256": "d9725b821e54d2827b75a7436007775e918e52b6c0ab0ac5a2a768c85a947c10",
+    "notices": [
+      {
+        "upstream": {
+          "url": "https://raw.githubusercontent.com/format-message/format-message/ece4dfacbec6af56e98897a3acbf0c99c64c2ed2/LICENSE-MIT",
+          "sha256": "60a3946f201f9fa04ad5b02f24c5d92f07ccfdee3948900723c70ca23e4055fd",
+          "text": "Copyright (c) 2015 Andy VanWagoner\n\nPermission is hereby granted, free of charge, to any person\nobtaining a copy of this software and associated documentation\nfiles (the \"Software\"), to deal in the Software without\nrestriction, including without limitation the rights to use,\ncopy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the\nSoftware is furnished to do so, subject to the following\nconditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES\nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\nHOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nWHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\nOTHER DEALINGS IN THE SOFTWARE.\n",
+          "revision": "ece4dfacbec6af56e98897a3acbf0c99c64c2ed2"
+        }
+      }
+    ]
+  },
+  {
+    "location": "node_modules/format-message-parse",
+    "version": "6.2.4",
+    "license": "MIT",
+    "note": "Repository-root licence at npm gitHead; registry tarball integrity matched the installed lockfile. This is notice evidence, not complete source delivery.",
+    "integrity": "sha512-k7WqXkEzgXkW4wkHdS6Cv2Ou0rIFtiDelZjgoe1saW4p7FT7zS8OeAUpAekhormqzpeecR97e4vBft1zMsfFOQ==",
+    "packageManifestSha256": "b33fbe65333691f4dafd4735c63ac81d5bd7123e92b4f15dc61552fa1b36c8f7",
+    "metadataUrl": "https://registry.npmjs.org/format-message-parse/6.2.4",
+    "metadataSha256": "19af60a86d2fdc408150b4cb228ab61df41b5c625218f9f45834cfb2089c7e62",
+    "notices": [
+      {
+        "upstream": {
+          "url": "https://raw.githubusercontent.com/format-message/format-message/ece4dfacbec6af56e98897a3acbf0c99c64c2ed2/LICENSE-MIT",
+          "sha256": "60a3946f201f9fa04ad5b02f24c5d92f07ccfdee3948900723c70ca23e4055fd",
+          "text": "Copyright (c) 2015 Andy VanWagoner\n\nPermission is hereby granted, free of charge, to any person\nobtaining a copy of this software and associated documentation\nfiles (the \"Software\"), to deal in the Software without\nrestriction, including without limitation the rights to use,\ncopy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the\nSoftware is furnished to do so, subject to the following\nconditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES\nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\nHOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nWHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\nOTHER DEALINGS IN THE SOFTWARE.\n",
+          "revision": "ece4dfacbec6af56e98897a3acbf0c99c64c2ed2"
+        }
+      }
+    ]
+  },
+  {
+    "location": "node_modules/babel-runtime",
+    "version": "6.26.0",
+    "license": "MIT",
+    "note": "Repository-root licence at resolved upstream v6.26.0 release tag. Package name/version verified in packages/babel-runtime/package.json at this revision; installed manifest and lock integrity pinned separately. This is notice evidence, not proof of identical source or complete source delivery.",
+    "integrity": "sha512-ITKNuq2wKlW1fJg9sSW52eepoYgZBggvOAHC0u/CYu/qxQ9EVzThCgR69BnSXLHjy2f7SY5zaQ4yt7H9ZVxY2g==",
+    "packageManifestSha256": "2e59d087acfe6c8f272b4d0f96ad63419922f066f22ff78fbc7ae051f68797e2",
+    "upstreamManifestUrl": "https://raw.githubusercontent.com/babel/babel/cee4cde53e4f452d89229986b9368ecdb41e00da/packages/babel-runtime/package.json",
+    "notices": [
+      {
+        "upstream": {
+          "url": "https://raw.githubusercontent.com/babel/babel/cee4cde53e4f452d89229986b9368ecdb41e00da/LICENSE",
+          "text": "MIT License\n\nCopyright (c) 2014-2017 Sebastian McKenzie <sebmck@gmail.com>\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\"Software\"), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
+          "sha256": "f533455c5981c9213689ee68bcc54fb717d8396739781b7e30c344e94323d752",
+          "revision": "cee4cde53e4f452d89229986b9368ecdb41e00da"
+        }
+      }
+    ]
+  },
+  {
+    "location": "node_modules/format-message",
+    "version": "6.2.1",
+    "license": "MIT",
+    "note": "Repository-root licence at resolved upstream v6.2.1 release tag. Package name/version verified in packages/format-message/package.json at this revision; installed manifest and lock integrity pinned separately. This is notice evidence, not proof of identical source or complete source delivery.",
+    "integrity": "sha512-6gBXI+MOE9pu9QNeZf95V87GKYiLCdUvhisjts75xonaPAshtBu20NTZt2l8kbYcoMtxNyH9E9af+aieIRfVmw==",
+    "packageManifestSha256": "39afd2b9c674ae98d21699735223c5605469f0c9a90627860a3fc64113db3c77",
+    "upstreamManifestUrl": "https://raw.githubusercontent.com/format-message/format-message/f1627df6d98232673965c29393393ef5ae99c7f1/packages/format-message/package.json",
+    "notices": [
+      {
+        "upstream": {
+          "url": "https://raw.githubusercontent.com/format-message/format-message/f1627df6d98232673965c29393393ef5ae99c7f1/LICENSE-MIT",
+          "text": "Copyright (c) 2015 Andy VanWagoner\n\nPermission is hereby granted, free of charge, to any person\nobtaining a copy of this software and associated documentation\nfiles (the \"Software\"), to deal in the Software without\nrestriction, including without limitation the rights to use,\ncopy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the\nSoftware is furnished to do so, subject to the following\nconditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES\nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\nHOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nWHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\nOTHER DEALINGS IN THE SOFTWARE.\n",
+          "sha256": "60a3946f201f9fa04ad5b02f24c5d92f07ccfdee3948900723c70ca23e4055fd",
+          "revision": "f1627df6d98232673965c29393393ef5ae99c7f1"
+        }
+      }
+    ]
+  },
+  {
+    "location": "node_modules/lookup-closest-locale",
+    "version": "6.2.0",
+    "license": "MIT",
+    "note": "Repository-root licence at resolved upstream v6.2.0 release tag. Package name/version verified in packages/lookup-closest-locale/package.json at this revision; installed manifest and lock integrity pinned separately. This is notice evidence, not proof of identical source or complete source delivery.",
+    "integrity": "sha512-/c2kL+Vnp1jnV6K6RpDTHK3dgg0Tu2VVp+elEiJpjfS1UyY7AjOYHohRug6wT0OpoX2qFgNORndE9RqesfVxWQ==",
+    "packageManifestSha256": "6276f14e43c2fa8c460fa1ccbc47802053afa09363aab7c43b35b0f231c99120",
+    "upstreamManifestUrl": "https://raw.githubusercontent.com/format-message/format-message/ef02f024d2f3c5c0f0cd21a618f78c7d12d03fb3/packages/lookup-closest-locale/package.json",
+    "notices": [
+      {
+        "upstream": {
+          "url": "https://raw.githubusercontent.com/format-message/format-message/ef02f024d2f3c5c0f0cd21a618f78c7d12d03fb3/LICENSE-MIT",
+          "text": "Copyright (c) 2015 Andy VanWagoner\n\nPermission is hereby granted, free of charge, to any person\nobtaining a copy of this software and associated documentation\nfiles (the \"Software\"), to deal in the Software without\nrestriction, including without limitation the rights to use,\ncopy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the\nSoftware is furnished to do so, subject to the following\nconditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES\nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\nHOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nWHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\nOTHER DEALINGS IN THE SOFTWARE.\n",
+          "sha256": "60a3946f201f9fa04ad5b02f24c5d92f07ccfdee3948900723c70ca23e4055fd",
+          "revision": "ef02f024d2f3c5c0f0cd21a618f78c7d12d03fb3"
+        }
+      }
+    ]
+  }
+]

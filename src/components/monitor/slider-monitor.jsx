@@ -4,7 +4,18 @@ import classNames from 'classnames';
 
 import styles from './monitor.css';
 
-const SliderMonitor = ({categoryColor, isDiscrete, label, min, max, value, onSliderUpdate}) => (
+const SliderMonitor = ({
+    categoryColor,
+    isDiscrete,
+    label,
+    min,
+    max,
+    value,
+    onSliderBlur,
+    onSliderGestureEnd,
+    onSliderGestureStart,
+    onSliderUpdate
+}) => (
     <div className={styles.defaultMonitor}>
         <div className={styles.row}>
             <div className={styles.label}>
@@ -28,7 +39,14 @@ const SliderMonitor = ({categoryColor, isDiscrete, label, min, max, value, onSli
                 step={isDiscrete ? 1 : 0.01}
                 type="range"
                 value={value}
+                onBlur={onSliderBlur}
                 onChange={onSliderUpdate}
+                onKeyDown={onSliderGestureStart}
+                onKeyUp={onSliderGestureEnd}
+                onMouseDown={onSliderGestureStart}
+                onMouseUp={onSliderGestureEnd}
+                onTouchEnd={onSliderGestureEnd}
+                onTouchStart={onSliderGestureStart}
             />
         </div>
 
@@ -44,6 +62,9 @@ SliderMonitor.propTypes = {
     label: PropTypes.string.isRequired,
     max: PropTypes.number,
     min: PropTypes.number,
+    onSliderBlur: PropTypes.func,
+    onSliderGestureEnd: PropTypes.func,
+    onSliderGestureStart: PropTypes.func,
     onSliderUpdate: PropTypes.func.isRequired,
     value: PropTypes.oneOfType([
         PropTypes.string,

@@ -108,6 +108,7 @@ const initialState = {
     error: null,
     projectData: null,
     projectId: null,
+    isProjectFromUrl: false,
     loadingState: LoadingState.NOT_LOADED
 };
 
@@ -121,7 +122,8 @@ const reducer = function (state, action) {
         if (state.loadingState === LoadingState.CREATING_NEW) {
             return Object.assign({}, state, {
                 loadingState: LoadingState.SHOWING_WITH_ID,
-                projectId: action.projectId
+                projectId: action.projectId,
+                isProjectFromUrl: false
             });
         }
         return state;
@@ -129,7 +131,8 @@ const reducer = function (state, action) {
         if (state.loadingState === LoadingState.FETCHING_WITH_ID) {
             return Object.assign({}, state, {
                 loadingState: LoadingState.LOADING_VM_WITH_ID,
-                projectData: action.projectData
+                projectData: action.projectData,
+                isProjectFromUrl: Boolean(action.isProjectFromUrl)
             });
         }
         return state;
@@ -137,7 +140,8 @@ const reducer = function (state, action) {
         if (state.loadingState === LoadingState.FETCHING_NEW_DEFAULT) {
             return Object.assign({}, state, {
                 loadingState: LoadingState.LOADING_VM_NEW_DEFAULT,
-                projectData: action.projectData
+                projectData: action.projectData,
+                isProjectFromUrl: false
             });
         }
         return state;
@@ -146,7 +150,8 @@ const reducer = function (state, action) {
             state.loadingState === LoadingState.LOADING_VM_NEW_DEFAULT) {
             return Object.assign({}, state, {
                 loadingState: LoadingState.SHOWING_WITHOUT_ID,
-                projectId: defaultProjectId
+                projectId: defaultProjectId,
+                isProjectFromUrl: false
             });
         }
         return state;
@@ -170,7 +175,8 @@ const reducer = function (state, action) {
         if (state.loadingState === LoadingState.REMIXING) {
             return Object.assign({}, state, {
                 loadingState: LoadingState.SHOWING_WITH_ID,
-                projectId: action.projectId
+                projectId: action.projectId,
+                isProjectFromUrl: false
             });
         }
         return state;
@@ -180,7 +186,8 @@ const reducer = function (state, action) {
         if (state.loadingState === LoadingState.CREATING_COPY) {
             return Object.assign({}, state, {
                 loadingState: LoadingState.SHOWING_WITH_ID,
-                projectId: action.projectId
+                projectId: action.projectId,
+                isProjectFromUrl: false
             });
         }
         return state;
@@ -395,12 +402,13 @@ const doneCreatingProject = (id, loadingState) => {
     }
 };
 
-const onFetchedProjectData = (projectData, loadingState) => {
+const onFetchedProjectData = (projectData, loadingState, isProjectFromUrl = false) => {
     switch (loadingState) {
     case LoadingState.FETCHING_WITH_ID:
         return {
             type: DONE_FETCHING_WITH_ID,
-            projectData: projectData
+            projectData: projectData,
+            isProjectFromUrl
         };
     case LoadingState.FETCHING_NEW_DEFAULT:
         return {

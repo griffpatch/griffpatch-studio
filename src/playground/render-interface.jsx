@@ -19,7 +19,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
-import {FormattedMessage, defineMessages, injectIntl, intlShape} from 'react-intl';
+import {FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import {getIsLoading} from '../reducers/project-state.js';
 import AppStateHOC from '../lib/app-state-hoc.jsx';
 import ErrorBoundaryHOC from '../lib/error-boundary-hoc.jsx';
@@ -42,7 +42,7 @@ import AddonChannels from '../addons/channels';
 import {loadServiceWorker} from './load-service-worker';
 import runAddons from '../addons/entry';
 import InvalidEmbed from '../components/tw-invalid-embed/invalid-embed.jsx';
-import {APP_NAME} from '../lib/brand.js';
+import {APP_NAME, APP_FEEDBACK_PATH, APP_SOURCE_PATH, APP_PRIVACY_PATH, projectPageTitle} from '../lib/brand.js';
 
 import styles from './interface.css';
 
@@ -54,14 +54,6 @@ const handleClickAddonSettings = addonId => {
     const url = `${process.env.ROOT}${path}${typeof addonId === 'string' ? `#${addonId}` : ''}`;
     window.open(url);
 };
-
-const messages = defineMessages({
-    defaultTitle: {
-        defaultMessage: 'Run Scratch projects faster',
-        description: 'Title of homepage',
-        id: 'tw.guiDefaultTitle'
-    }
-});
 
 const WrappedMenuBar = compose(
     SBFileUploaderHOC,
@@ -121,9 +113,9 @@ const Footer = () => (
                 <div className={styles.footerSection}>
                     <a href="credits.html">
                         <FormattedMessage
-                            defaultMessage="Credits"
-                            description="Credits link in footer"
-                            id="tw.footer.credits"
+                            defaultMessage="About & Credits"
+                            description="About and credits link in footer"
+                            id="gs.footer.about"
                         />
                     </a>
                 </div>
@@ -159,25 +151,25 @@ const Footer = () => (
                     </a>
                 </div>
                 <div className={styles.footerSection}>
-                    <a href="https://scratch.mit.edu/users/GarboMuffin/#comments">
+                    <a href={APP_FEEDBACK_PATH}>
                         <FormattedMessage
                             defaultMessage="Feedback & Bugs"
                             description="Link to feedback/bugs page"
                             id="tw.feedback"
                         />
                     </a>
-                    <a href="https://github.com/TurboWarp/">
+                    <a href={APP_SOURCE_PATH}>
                         <FormattedMessage
                             defaultMessage="Source Code"
                             description="Link to source code"
                             id="tw.code"
                         />
                     </a>
-                    <a href="privacy.html">
+                    <a href={APP_PRIVACY_PATH}>
                         <FormattedMessage
-                            defaultMessage="Privacy Policy"
-                            description="Link to privacy policy"
-                            id="tw.privacy"
+                            defaultMessage="Preview privacy information"
+                            description="Privacy information for this experimental preview"
+                            id="gs.footer.previewPrivacy"
                         />
                     </a>
                 </div>
@@ -197,11 +189,7 @@ class Interface extends React.Component {
         }
     }
     handleUpdateProjectTitle (title, isDefault) {
-        if (isDefault || !title) {
-            document.title = `${APP_NAME} - ${this.props.intl.formatMessage(messages.defaultTitle)}`;
-        } else {
-            document.title = `${title} - ${APP_NAME}`;
-        }
+        document.title = projectPageTitle(title, isDefault);
     }
     render () {
         if (isInvalidEmbed) {
@@ -331,9 +319,9 @@ class Interface extends React.Component {
                                 <p>
                                     <FormattedMessage
                                         // eslint-disable-next-line max-len
-                                        defaultMessage="{APP_NAME} is a Scratch mod that compiles projects to JavaScript to make them run really fast. Try it out by inputting a project ID or URL above or choosing a featured project below."
+                                        defaultMessage="{APP_NAME} is a playground for griffpatch's TurboWarp experiments and new ideas for the development interface. Open the editor to explore, or load a project above."
                                         description="Description of TurboWarp on the homepage"
-                                        id="tw.home.description"
+                                        id="gs.home.experiments"
                                         values={{
                                             APP_NAME
                                         }}

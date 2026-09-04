@@ -12,6 +12,7 @@ const DeleteButton = props => (
             styles.deleteButton,
             props.className
         )}
+        data-studio-target={props.studioTarget}
         role="button"
         tabIndex={props.tabIndex}
         onClick={props.onClick}
@@ -30,6 +31,7 @@ const DeleteButton = props => (
 DeleteButton.propTypes = {
     className: PropTypes.string,
     onClick: PropTypes.func.isRequired,
+    studioTarget: PropTypes.string,
     tabIndex: PropTypes.number
 };
 

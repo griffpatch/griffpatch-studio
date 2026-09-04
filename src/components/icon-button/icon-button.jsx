@@ -9,6 +9,7 @@ const IconButton = ({
     disabled,
     className,
     title,
+    studioTarget,
     onClick
 }) => (
     <div
@@ -17,6 +18,7 @@ const IconButton = ({
             className,
             disabled ? styles.disabled : null
         )}
+        data-studio-target={studioTarget}
         role="button"
         onClick={disabled ? null : onClick}
     >
@@ -36,6 +38,7 @@ IconButton.propTypes = {
     disabled: PropTypes.bool,
     img: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
     onClick: PropTypes.func.isRequired,
+    studioTarget: PropTypes.string,
     title: PropTypes.node.isRequired
 };
 

@@ -1,0 +1,92 @@
+.sa-workspace-minimap {
+  --sa-minimap-keyline: var(--text-primary, #575e75);
+  --sa-minimap-accent: var(--looks-secondary, #cf245f);
+  position: absolute;
+  z-index: 45;
+  box-sizing: border-box;
+  width: 228px;
+  height: 228px;
+  overflow: hidden;
+  border: 1px solid var(--ui-tertiary, rgba(87, 94, 117, 0.35));
+  border-radius: 9px;
+  background: var(--ui-modal-background, rgba(255, 255, 255, 0.94));
+  box-shadow: 0 2px 9px var(--shadow, rgba(0, 0, 0, 0.2));
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.sa-workspace-minimap:hover {
+  border-color: color-mix(in srgb, var(--sa-minimap-accent) 52%, var(--ui-tertiary, transparent));
+}
+
+.sa-workspace-minimap.sa-workspace-minimap-dragging {
+  cursor: crosshair;
+}
+
+.sa-workspace-minimap.sa-workspace-minimap-resizing,
+.sa-workspace-minimap.sa-workspace-minimap-resizing * {
+  cursor: nwse-resize;
+}
+
+.sa-workspace-minimap canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.sa-workspace-minimap-resize {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px 0 6px 0;
+  outline: none;
+  background: transparent;
+  cursor: nwse-resize;
+}
+
+.sa-workspace-minimap-resize::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  content: "";
+  border-radius: 2px 0 0;
+  background: color-mix(in srgb, var(--sa-minimap-keyline) 15%, transparent);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.sa-workspace-minimap-resize:hover,
+.sa-workspace-minimap-resize:focus-visible,
+.sa-workspace-minimap-resizing .sa-workspace-minimap-resize {
+  background: transparent;
+}
+
+.sa-workspace-minimap-resize:hover::before,
+.sa-workspace-minimap-resize:focus-visible::before,
+.sa-workspace-minimap-resizing .sa-workspace-minimap-resize::before {
+  background: color-mix(in srgb, var(--sa-minimap-keyline) 28%, transparent);
+}
+
+.sa-workspace-minimap-resize:focus-visible {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sa-minimap-keyline) 36%, transparent);
+}
+
+.sa-workspace-minimap[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sa-workspace-minimap { scroll-behavior: auto; }
+}

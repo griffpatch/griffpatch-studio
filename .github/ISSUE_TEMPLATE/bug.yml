@@ -1,0 +1,28 @@
+name: Report a bug
+description: Something in Griffpatch Studio is not working as expected.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please search existing issues first. Reports are PUBLIC. Do not share personal information, private projects or passwords.
+        For security or privacy concerns, email studio@griffpatch.academy instead.
+        This tracker is for the editor, not help writing Scratch projects. Only use GitHub if you meet its account requirements; otherwise ask a parent or teacher to help report a problem.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: A small example is best. Attach a project only if it is safe to share publicly.
+      placeholder: "1. ...\n2. ..."
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser, operating system and Studio version
+      placeholder: For example, Chrome on Windows; release version if known

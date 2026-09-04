@@ -263,7 +263,7 @@ export default async function ({ addon, console, msg }) {
         typeof sortableHOCInstance.props.selectedItemIndex === "number") &&
       typeof sortableHOCInstance.containerBox !== "undefined" &&
       typeof SortableHOC.prototype.componentDidMount === "undefined" &&
-      typeof SortableHOC.prototype.componentDidUpdate === "undefined" &&
+      typeof SortableHOC.prototype.componentDidUpdate === "function" &&
       typeof SortableHOC.prototype.handleAddSortable === "function" &&
       typeof SortableHOC.prototype.handleRemoveSortable === "function" &&
       typeof SortableHOC.prototype.setRef === "function"
@@ -619,7 +619,9 @@ export default async function ({ addon, console, msg }) {
       this.saInitialSetup();
     };
 
+    const originalSortableHOCComponentDidUpdate = SortableHOC.prototype.componentDidUpdate;
     SortableHOC.prototype.componentDidUpdate = function (prevProps, prevState) {
+      originalSortableHOCComponentDidUpdate.call(this, prevProps, prevState);
       const selectedItem = getSelectedItem(this);
       if (selectedItem) {
         const folder = getFolderFromName(selectedItem.name);

@@ -36,7 +36,7 @@ import TWFancyCheckbox from '../../components/tw-fancy-checkbox/checkbox.jsx';
 import styles from './settings.css';
 import {detectTheme} from '../../lib/themes/themePersistance.js';
 import {applyGuiColors} from '../../lib/themes/guiHelpers.js';
-import {APP_NAME} from '../../lib/brand.js';
+import {APP_TITLE, APP_FEEDBACK_PATH} from '../../lib/brand.js';
 import '../../lib/normalize.css';
 
 /* eslint-disable no-alert */
@@ -59,7 +59,7 @@ if (locale !== 'en') {
     }
 }
 
-document.title = `${settingsTranslations.title} - ${APP_NAME}`;
+document.title = `${settingsTranslations.title} - ${APP_TITLE}`;
 const theme = detectTheme();
 applyGuiColors(theme);
 
@@ -1104,7 +1104,7 @@ class AddonSettingsComponent extends React.Component {
                             />
                         </div>
                         <a
-                            href="https://scratch.mit.edu/users/GarboMuffin/#comments"
+                            href={`${process.env.ROOT}${APP_FEEDBACK_PATH}`}
                             target="_blank"
                             rel="noreferrer"
                             className={styles.feedbackButtonOuter}

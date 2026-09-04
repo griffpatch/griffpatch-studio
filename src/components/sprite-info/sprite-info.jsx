@@ -87,6 +87,7 @@ class SpriteInfo extends React.Component {
 
         const spriteNameInput = (
             <BufferedInput
+                data-studio-target="sprite-name-input"
                 className={classNames(
                     styles.spriteInput,
                     {

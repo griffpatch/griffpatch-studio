@@ -16,6 +16,7 @@ import {
 } from '../lib/backpack-api';
 import DragConstants from '../lib/drag-constants';
 import DropAreaHOC from '../lib/drop-area-hoc.jsx';
+import BackpackBlockDropSession from '../lib/backpack/block-drop-session';
 
 import {connect} from 'react-redux';
 import storage from '../lib/storage';
@@ -61,6 +62,11 @@ class Backpack extends React.Component {
             expanded: false,
             contents: []
         };
+        // React state drives the visual treatment, but it is not a safe source
+        // of truth for these ordering-sensitive drag callbacks. A quick drop can
+        // deliver BLOCK_DRAG_UPDATE, mouseenter and BLOCK_DRAG_END before the
+        // corresponding setState calls have committed.
+        this.blockDropSession = new BackpackBlockDropSession();
 
         // If a host is given, add it as a web source to the storage module
         // TODO remove the hacky flag that prevents double adding
@@ -226,24 +232,26 @@ class Backpack extends React.Component {
         }
     }
     handleBlockDragUpdate (isOutsideWorkspace) {
+        this.blockDropSession.updateOutsideWorkspace(isOutsideWorkspace);
         this.setState({
             blockDragOutsideWorkspace: isOutsideWorkspace
         });
     }
     handleMouseEnter () {
-        if (this.state.blockDragOutsideWorkspace) {
+        if (this.blockDropSession.enterBackpack()) {
             this.setState({
                 blockDragOverBackpack: true
             });
         }
     }
     handleMouseLeave () {
+        this.blockDropSession.leaveBackpack();
         this.setState({
             blockDragOverBackpack: false
         });
     }
     handleBlockDragEnd (blocks, topBlockId) {
-        if (this.state.blockDragOverBackpack) {
+        if (this.blockDropSession.end()) {
             this.handleDrop({
                 dragType: DragConstants.CODE,
                 payload: {

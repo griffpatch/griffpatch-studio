@@ -1,3 +1,77 @@
+# Griffpatch Studio
+
+**An experimental fork of [TurboWarp](https://turbowarp.org/), exploring new ways
+to work with its development interface.**
+
+TurboWarp, Scratch and Scratch Addons provide the foundations of this editor.
+Their contributors created the existing editor, runtime/compiler and much of the
+addon functionality. Griffpatch Studio adds experiments in keyboard block editing,
+completion and navigation, Finder integration, script breadcrumbs and a resizable
+workspace minimap. Keyboard editing is available but starts switched off.
+
+This is an independent project operated by Griffpatch Ltd, not an official or
+endorsed TurboWarp or Scratch release. It is evolving software: save important
+projects to your computer. This initial publication is a **source preview**;
+publication here does not announce a hosted production service.
+
+## Source and attribution
+
+- Upstream GUI: [TurboWarp/scratch-gui](https://github.com/TurboWarp/scratch-gui).
+- Modified Blocks: [griffpatch/griffpatch-studio-blocks](https://github.com/griffpatch/griffpatch-studio-blocks).
+- Addons: [Scratch Addons](https://github.com/ScratchAddons/ScratchAddons) and
+  [TurboWarp's adaptation](https://github.com/TurboWarp/addons).
+- [Fork notice](FORK-NOTICE.md), [GPL-3.0 licence](LICENSE) and
+  [third-party notices](static/licenses/third-party-notices.txt).
+
+This standalone repository retains the upstream Git history. Our initial changes
+are one reviewed source snapshot, without the private experimental commit history.
+The upstream base is `a2946eeb9a9dca7857d7ab53d766b54288c7a2ff`. Add
+`https://github.com/TurboWarp/scratch-gui.git` as an `upstream` Git remote to fetch
+and merge future upstream changes. The standalone GitHub repository does not
+change the underlying shared Git ancestry.
+
+## Build this source preview
+
+The verified Windows toolchain is Node.js 24.18.0, npm 11.16.0, Python 3.13 and
+Java 11. Put Java and Python on PATH before installing Blocks. In fresh working
+directories (not a running editor checkout):
+
+```powershell
+git clone https://github.com/griffpatch/griffpatch-studio-blocks.git
+git -C griffpatch-studio-blocks checkout 1ce4feda1f55043cb9334d822cf516ddda427ae9
+Set-Location griffpatch-studio-blocks
+npm ci
+if ($LASTEXITCODE) { throw 'Blocks install/build failed' }
+Set-Location ..
+git clone https://github.com/griffpatch/griffpatch-studio.git
+Set-Location griffpatch-studio
+# For a particular release, check out its published tag before installing.
+npm ci
+if ($LASTEXITCODE) { throw 'GUI install failed' }
+./scripts/use-local-studio-scratch-blocks.ps1 -ScratchBlocksPath ../griffpatch-studio-blocks
+$env:NODE_ENV = 'production'
+$env:CI = '1'
+npm run build
+if ($LASTEXITCODE) { throw 'GUI build failed' }
+```
+
+The web application is in `build/`. **Do not skip installing the modified Blocks
+bundles**: the GUI lockfile's upstream package does not contain our extra hooks.
+For local development, run `npm start` and visit `http://localhost:8601/`.
+Additional historical verification details are in [CLEAN-BUILD.md](docs/release/CLEAN-BUILD.md).
+
+## Feedback and private concerns
+
+Use this repository's [issue forms](https://github.com/griffpatch/griffpatch-studio/issues/new/choose)
+for Studio bugs and suggestions. Reports are public: do not include personal
+information or private projects. This is not a general Scratch coding-help service.
+For privacy or security concerns, email **studio@griffpatch.academy** instead.
+Please do not send Studio-specific bugs to TurboWarp or Scratch maintainers.
+
+## Upstream README and notices
+
+The following upstream documentation and licence notices are retained.
+
 scratch-gui modified for use in [TurboWarp](https://turbowarp.org/)
 
 ## Setup

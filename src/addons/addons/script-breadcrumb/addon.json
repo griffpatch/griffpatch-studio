@@ -1,0 +1,12 @@
+{
+  "name": "Script breadcrumb",
+  "description": "Shows the last selected or edited script and its sprite, with a pinned label when the script head scrolls above the code area.",
+  "tags": ["editor", "codeEditor"],
+  "credits": [{"name": "griffpatch"}],
+  "enabledByDefault": true,
+  "dynamicDisable": true,
+  "editorOnly": true,
+  "noTranslations": true,
+  "userscripts": [{"url": "userscript.js"}],
+  "userstyles": [{"url": "userstyle.css"}]
+}

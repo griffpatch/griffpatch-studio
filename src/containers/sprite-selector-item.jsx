@@ -8,6 +8,7 @@ import {updateAssetDrag} from '../reducers/asset-drag';
 import VM from 'scratch-vm';
 import getCostumeUrl from '../lib/get-costume-url';
 import DragRecognizer from '../lib/drag-recognizer';
+import DragConstants from '../lib/drag-constants';
 import {getEventXY} from '../lib/touch-utils';
 
 import SpriteSelectorItemComponent from '../components/sprite-selector-item/sprite-selector-item.jsx';
@@ -134,6 +135,10 @@ class SpriteSelectorItem extends React.PureComponent {
             /* eslint-enable no-unused-vars */
             ...props
         } = this.props;
+        const studioTarget = this.props.studioTarget || (
+            this.props.dragType === DragConstants.SPRITE && typeof this.props.name === 'string' ?
+                `sprite:${this.props.name}` : null
+        );
         return (
             <SpriteSelectorItemComponent
                 componentRef={this.setRef}
@@ -148,6 +153,7 @@ class SpriteSelectorItem extends React.PureComponent {
                 onMouseEnter={this.handleMouseEnter}
                 onMouseLeave={this.handleMouseLeave}
                 {...props}
+                studioTarget={studioTarget}
             />
         );
     }
@@ -175,6 +181,7 @@ SpriteSelectorItem.propTypes = {
     onExportButtonClick: PropTypes.func,
     receivedBlocks: PropTypes.bool.isRequired,
     selected: PropTypes.bool,
+    studioTarget: PropTypes.string,
     vm: PropTypes.instanceOf(VM).isRequired
 };
 

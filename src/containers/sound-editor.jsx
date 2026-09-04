@@ -16,6 +16,7 @@ import AudioEffects from '../lib/audio/audio-effects.js';
 import SoundEditorComponent from '../components/sound-editor/sound-editor.jsx';
 import AudioBufferPlayer from '../lib/audio/audio-buffer-player.js';
 import log from '../lib/log.js';
+import {runStudioProjectOperationSource} from '../studio/bridge/project-operation-capture';
 
 const UNDO_STACK_SIZE = 99;
 
@@ -141,7 +142,7 @@ class SoundEditor extends React.Component {
             playhead: null
         });
     }
-    submitNewSamples (samples, sampleRate, skipUndo) {
+    submitNewSamples (samples, sampleRate, skipUndo, operationSource = null) {
         return downsampleIfNeeded({samples, sampleRate}, this.resampleBufferToRate)
             .then(({samples: newSamples, sampleRate: newSampleRate}) =>
                 WavEncoder.encode({
@@ -156,10 +157,13 @@ class SoundEditor extends React.Component {
                         this.undoStack.push(this.getUndoItem());
                     }
                     this.resetState(newSamples, newSampleRate);
-                    this.props.vm.updateSoundBuffer(
+                    const update = () => this.props.vm.updateSoundBuffer(
                         this.props.soundIndex,
                         this.audioBufferPlayer.buffer,
                         new Uint8Array(wavBuffer));
+                    if (operationSource) {
+                        runStudioProjectOperationSource(this.props.vm, operationSource, update);
+                    } else update();
                     return true; // Edit was successful
                 })
             )
@@ -259,7 +263,10 @@ class SoundEditor extends React.Component {
         effects.process((renderedBuffer, adjustedTrimStart, adjustedTrimEnd) => {
             const samples = renderedBuffer.getChannelData(0);
             const sampleRate = renderedBuffer.sampleRate;
-            this.submitNewSamples(samples, sampleRate).then(success => {
+            this.submitNewSamples(samples, sampleRate, false, {
+                kind: 'sound-effect',
+                effect: name
+            }).then(success => {
                 if (success) {
                     if (this.state.trimStart === null) {
                         this.handlePlay();

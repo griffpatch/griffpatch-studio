@@ -21,7 +21,8 @@ import StageSelectorComponent from '../components/stage-selector/stage-selector.
 
 import {getBackdropLibrary} from '../lib/libraries/tw-async-libraries';
 import {handleFileUpload, costumeUpload} from '../lib/file-uploader.js';
-import {placeInViewport} from '../lib/backpack/code-payload.js';
+import {backpackScriptSource, placeInViewport} from '../lib/backpack/code-payload.js';
+import {runStudioProjectOperationSource} from '../studio/bridge/project-operation-capture';
 
 const dragTypes = [
     DragConstants.COSTUME,
@@ -101,7 +102,11 @@ class StageSelector extends React.Component {
     handleEmptyBackdrop (e) {
         e.stopPropagation(); // Prevent click from falling through to stage selector, select it manually below
         this.props.vm.setEditingTarget(this.props.id);
-        this.handleNewBackdrop(emptyCostume(this.props.intl.formatMessage(sharedMessages.backdrop, {index: 1})));
+        runStudioProjectOperationSource(this.props.vm, {
+            kind: 'costume-paint'
+        }, () => this.handleNewBackdrop(
+            emptyCostume(this.props.intl.formatMessage(sharedMessages.backdrop, {index: 1}))
+        ));
     }
     handleBackdropUpload (e) {
         const vm = this.props.vm;
@@ -112,7 +117,12 @@ class StageSelector extends React.Component {
                 vmCostumes.forEach((costume, i) => {
                     costume.name = `${fileName}${i ? i + 1 : ''}`;
                 });
-                this.handleNewBackdrop(vmCostumes).then(() => {
+                const addBackdrops = () => this.handleNewBackdrop(vmCostumes);
+                const addition = vmCostumes.length === 1 ? runStudioProjectOperationSource(vm, {
+                    kind: 'costume-upload',
+                    fileName
+                }, addBackdrops) : addBackdrops();
+                addition.then(() => {
                     if (fileIndex === fileCount - 1) {
                         this.props.onCloseImporting();
                     }
@@ -152,7 +162,11 @@ class StageSelector extends React.Component {
                         this.props.workspaceMetrics.targets[this.props.id],
                         this.props.isRtl
                     );
-                    this.props.vm.shareBlocksToTarget(centered, this.props.id);
+                    runStudioProjectOperationSource(
+                        this.props.vm,
+                        backpackScriptSource(dragInfo.payload),
+                        () => this.props.vm.shareBlocksToTarget(centered, this.props.id)
+                    );
                     this.props.vm.refreshWorkspace();
                 });
         }

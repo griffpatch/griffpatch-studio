@@ -58,6 +58,7 @@ test('settings, event, default values', () => {
     const store = new SettingStore();
     const fn = jest.fn();
     expect(store.getAddonSetting('onion-skinning', 'default')).toBe(false);
+    expect(store.getAddonSetting('workspace-minimap', 'size')).toBe('small');
     expect('default' in store.store['onion-skinning']).toBe(false);
     store.addEventListener('setting-changed', fn);
     store.setAddonSetting('onion-skinning', 'default', true);

@@ -67,6 +67,7 @@ const PromptComponent = props => (
                 <input
                     autoFocus
                     className={styles.variableNameTextInput}
+                    data-studio-target="prompt-variable-name"
                     defaultValue={props.defaultValue}
                     name={props.label}
                     onChange={props.onChange}
@@ -92,6 +93,7 @@ const PromptComponent = props => (
                             <label>
                                 <input
                                     checked={props.globalSelected}
+                                    data-studio-target="prompt-scope-global"
                                     name="variableScopeOption"
                                     type="radio"
                                     value="global"
@@ -106,6 +108,7 @@ const PromptComponent = props => (
                             >
                                 <input
                                     checked={!props.globalSelected}
+                                    data-studio-target="prompt-scope-local"
                                     disabled={props.cloudSelected}
                                     name="variableScopeOption"
                                     type="radio"
@@ -124,6 +127,7 @@ const PromptComponent = props => (
                             >
                                 <input
                                     checked={props.cloudSelected && props.canAddCloudVariable}
+                                    data-studio-target="prompt-cloud"
                                     disabled={!props.canAddCloudVariable}
                                     type="checkbox"
                                     onChange={props.onCloudVarOptionChange}
@@ -180,6 +184,7 @@ const PromptComponent = props => (
             <Box className={styles.buttonRow}>
                 <button
                     className={styles.cancelButton}
+                    data-studio-target="prompt-cancel"
                     onClick={props.onCancel}
                 >
                     <FormattedMessage
@@ -190,6 +195,7 @@ const PromptComponent = props => (
                 </button>
                 <button
                     className={styles.okButton}
+                    data-studio-target="prompt-ok"
                     onClick={props.onOk}
                 >
                     <FormattedMessage

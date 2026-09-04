@@ -139,6 +139,7 @@ const SpriteSelectorComponent = function (props) {
                     }
                 ]}
                 title={intl.formatMessage(messages.addSpriteFromLibrary)}
+                studioTarget="sprite-library-open"
                 tooltipPlace={isRtl(intl.locale) ? 'right' : 'left'}
                 onClick={onNewSpriteClick}
             />

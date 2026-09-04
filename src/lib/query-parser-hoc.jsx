@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import queryString from 'query-string';
 import {connect} from 'react-redux';
 
 import {detectTutorialId} from './tutorial-from-url';
@@ -16,8 +15,9 @@ const QueryParserHOC = function (WrappedComponent) {
     class QueryParserComponent extends React.Component {
         constructor (props) {
             super(props);
-            const queryParams = queryString.parse(location.search);
-            const tutorialId = detectTutorialId(queryParams);
+            // Avoid the legacy query-string decoder on untrusted URL input.
+            const queryParams = new URLSearchParams(location.search);
+            const tutorialId = detectTutorialId({tutorial: queryParams.getAll('tutorial')});
             if (tutorialId) {
                 if (tutorialId === 'all') {
                     this.openTutorials();

@@ -142,7 +142,9 @@ const ProjectFetcherHOC = function (WrappedComponent) {
             return assetPromise
                 .then(projectAsset => {
                     if (projectAsset) {
-                        this.props.onFetchedProjectData(projectAsset.data, loadingState);
+                        // Keep provenance with the loaded bytes, not with the mutable
+                        // address bar. A URL override does not own the numeric cloud room.
+                        this.props.onFetchedProjectData(projectAsset.data, loadingState, Boolean(projectUrl));
                     } else if (projectUrl) {
                         // Treat failure to load as an error
                         // Throw to be caught by catch later on
@@ -223,8 +225,8 @@ const ProjectFetcherHOC = function (WrappedComponent) {
     const mapDispatchToProps = dispatch => ({
         onActivateTab: tab => dispatch(activateTab(tab)),
         onError: error => dispatch(projectError(error)),
-        onFetchedProjectData: (projectData, loadingState) =>
-            dispatch(onFetchedProjectData(projectData, loadingState)),
+        onFetchedProjectData: (projectData, loadingState, isProjectFromUrl) =>
+            dispatch(onFetchedProjectData(projectData, loadingState, isProjectFromUrl)),
         setProjectId: projectId => dispatch(setProjectId(projectId)),
         onProjectUnchanged: () => dispatch(setProjectUnchanged())
     });

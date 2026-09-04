@@ -12,7 +12,9 @@ const postcssVars = require('postcss-simple-vars');
 const postcssImport = require('postcss-import');
 
 const STATIC_PATH = process.env.STATIC_PATH || '/static';
-const {APP_NAME} = require('./src/lib/brand');
+const brand = require('./src/lib/brand');
+const {APP_TITLE} = brand;
+const studioStaticAssets = require('./scripts/studio-static-assets.cjs');
 
 const root = process.env.ROOT || '';
 if (root.length > 0 && !root.endsWith('/')) {
@@ -22,11 +24,23 @@ if (root.length > 0 && !root.endsWith('/')) {
 const htmlWebpackPluginCommon = {
     root: root,
     meta: JSON.parse(process.env.EXTRA_META || '{}'),
-    APP_NAME
+    ...brand
 };
 
 // When this changes, the path for all JS files will change, bypassing any HTTP caches
 const CACHE_EPOCH = 'pentapod';
+
+class StudioBuildIdPlugin {
+    apply (compiler) {
+        compiler.hooks.emit.tap('StudioBuildIdPlugin', compilation => {
+            const source = `<!doctype html><body>${compilation.hash}</body>`;
+            compilation.assets['studio-build-id.html'] = {
+                source: () => source,
+                size: () => source.length
+            };
+        });
+    }
+}
 
 const base = {
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -54,7 +68,11 @@ const base = {
             process.env.NODE_ENV === 'production' ? `js/${CACHE_EPOCH}/[name].[contenthash].js` : 'js/[name].js'
         ),
         chunkFilename: (
-            process.env.NODE_ENV === 'production' ? `js/${CACHE_EPOCH}/[name].[contenthash].js` : 'js/[name].js'
+            // Lazy Scratch Blocks/addon chunks must be versioned in local
+            // snapshots too. Versioning only editor.js can mix new Studio
+            // code with an old cached Blockly runtime.
+            process.env.NODE_ENV === 'production' ? `js/${CACHE_EPOCH}/[name].[contenthash].js` :
+                'js/[name].[contenthash].js'
         ),
         publicPath: root
     },
@@ -184,53 +202,59 @@ module.exports = [
             }),
             new HtmlWebpackPlugin({
                 chunks: ['editor'],
+                hash: true,
                 template: 'src/playground/index.ejs',
                 filename: 'editor.html',
-                title: `${APP_NAME} - Run Scratch projects faster`,
+                title: APP_TITLE,
                 isEditor: true,
                 ...htmlWebpackPluginCommon
             }),
+            new StudioBuildIdPlugin(),
             new HtmlWebpackPlugin({
                 chunks: ['player'],
                 template: 'src/playground/index.ejs',
                 filename: 'index.html',
-                title: `${APP_NAME} - Run Scratch projects faster`,
+                title: APP_TITLE,
                 ...htmlWebpackPluginCommon
             }),
             new HtmlWebpackPlugin({
                 chunks: ['fullscreen'],
                 template: 'src/playground/index.ejs',
                 filename: 'fullscreen.html',
-                title: `${APP_NAME} - Run Scratch projects faster`,
+                title: APP_TITLE,
                 ...htmlWebpackPluginCommon
             }),
             new HtmlWebpackPlugin({
                 chunks: ['embed'],
                 template: 'src/playground/embed.ejs',
                 filename: 'embed.html',
-                title: `Embedded Project - ${APP_NAME}`,
+                title: `Embedded Project - ${APP_TITLE}`,
                 ...htmlWebpackPluginCommon
             }),
             new HtmlWebpackPlugin({
                 chunks: ['addon-settings'],
                 template: 'src/playground/simple.ejs',
                 filename: 'addons.html',
-                title: `Addon Settings - ${APP_NAME}`,
+                title: `Addon Settings - ${APP_TITLE}`,
                 ...htmlWebpackPluginCommon
             }),
             new HtmlWebpackPlugin({
                 chunks: ['credits'],
                 template: 'src/playground/simple.ejs',
                 filename: 'credits.html',
-                title: `${APP_NAME} Credits`,
+                title: `About - ${APP_TITLE}`,
                 ...htmlWebpackPluginCommon
             }),
             new CopyWebpackPlugin({
                 patterns: [
                     {
                         from: 'static',
-                        to: ''
-                    }
+                        to: '',
+                        transform: studioStaticAssets
+                    },
+                      {from: 'LICENSE', to: 'licenses/gui-GPL-3.0.txt'},
+                      {from: 'FORK-NOTICE.md', to: 'licenses/griffpatch-studio-notice.txt'},
+                    {from: 'TRADEMARK', to: 'licenses/upstream-trademark.txt'}
                 ]
             }),
             new CopyWebpackPlugin({

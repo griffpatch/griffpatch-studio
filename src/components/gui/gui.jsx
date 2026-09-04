@@ -337,7 +337,10 @@ const GUIComponent = props => {
                                 onSelect={onActivateTab}
                             >
                                 <TabList className={tabClassNames.tabList}>
-                                    <Tab className={tabClassNames.tab}>
+                                    <Tab
+                                        className={tabClassNames.tab}
+                                        data-studio-target="tab-code"
+                                    >
                                         <img
                                             draggable={false}
                                             src={codeIcon()}
@@ -350,6 +353,7 @@ const GUIComponent = props => {
                                     </Tab>
                                     <Tab
                                         className={tabClassNames.tab}
+                                        data-studio-target="tab-costumes"
                                         onClick={onActivateCostumesTab}
                                     >
                                         <img
@@ -372,6 +376,7 @@ const GUIComponent = props => {
                                     </Tab>
                                     <Tab
                                         className={tabClassNames.tab}
+                                        data-studio-target="tab-sounds"
                                         onClick={onActivateSoundsTab}
                                     >
                                         <img
@@ -404,6 +409,7 @@ const GUIComponent = props => {
                                     <Box className={styles.extensionButtonContainer}>
                                         <button
                                             className={styles.extensionButton}
+                                            data-studio-target="extension-library-open"
                                             title={intl.formatMessage(messages.addExtension)}
                                             onClick={onExtensionButtonClick}
                                         >

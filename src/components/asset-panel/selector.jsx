@@ -34,13 +34,14 @@ const Selector = props => {
     let newButtonSection = null;
 
     if (buttons.length > 0) {
-        const {img, title, onClick} = buttons[0];
+        const {img, title, onClick, studioTarget} = buttons[0];
         const moreButtons = buttons.slice(1);
         newButtonSection = (
             <Box className={styles.newButtons}>
                 <ActionMenu
                     img={img}
                     moreButtons={moreButtons}
+                    studioTarget={studioTarget}
                     title={title}
                     tooltipPlace={isRtl ? 'left' : 'right'}
                     onClick={onClick}
@@ -77,6 +78,7 @@ const Selector = props => {
                             name={item.name}
                             number={index + 1 /* 1-indexed */}
                             selected={index === selectedItemIndex}
+                            studioTarget={item.studioTarget}
                             onClick={onItemClick}
                             onDeleteButtonClick={onDeleteClick}
                             onDuplicateButtonClick={onDuplicateClick}
@@ -94,7 +96,12 @@ Selector.propTypes = {
     buttons: PropTypes.arrayOf(PropTypes.shape({
         title: PropTypes.string.isRequired,
         img: PropTypes.string.isRequired,
-        onClick: PropTypes.func
+        studioTarget: PropTypes.string,
+        onClick: PropTypes.func,
+        fileAccept: PropTypes.string,
+        fileChange: PropTypes.func,
+        fileInput: PropTypes.func,
+        fileMultiple: PropTypes.bool
     })),
     containerRef: PropTypes.func,
     dragType: PropTypes.oneOf(Object.keys(DragConstants)),
@@ -103,7 +110,8 @@ Selector.propTypes = {
     isRtl: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape({
         url: PropTypes.string,
-        name: PropTypes.any // modified by folders addon
+        name: PropTypes.any, // modified by folders addon
+        studioTarget: PropTypes.string
     })),
     onAddSortable: PropTypes.func,
     onDeleteClick: PropTypes.func,

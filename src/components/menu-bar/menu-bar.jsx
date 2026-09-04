@@ -95,7 +95,7 @@ import fileIcon from './icon--file.svg';
 import editIcon from './icon--edit.svg';
 import addonsIcon from './addons.svg';
 import errorIcon from './tw-error.svg';
-import advancedIcon from './tw-advanced.svg';
+import advancedIcon from './studio-advanced.svg';
 
 import ninetiesLogo from './nineties_logo.svg';
 import catLogo from './cat_logo.svg';
@@ -106,7 +106,8 @@ import sharedMessages from '../../lib/shared-messages';
 
 import SeeInsideButton from './tw-see-inside.jsx';
 import {notScratchDesktop} from '../../lib/isScratchDesktop.js';
-import {APP_NAME} from '../../lib/brand.js';
+import {APP_NAME, APP_CHANNEL, APP_ABOUT_PATH, APP_FEEDBACK_PATH, SHOW_UPSTREAM_NEWS} from '../../lib/brand.js';
+import studioMark from '../../../static/brand/griffpatch-studio.svg';
 
 const ariaMessages = defineMessages({
     tutorials: {
@@ -491,6 +492,24 @@ class MenuBar extends React.Component {
                 )}
             >
                 <div className={styles.mainMenu}>
+                    <a
+                        className={styles.studioBrand}
+                        href={`${process.env.ROOT}${APP_ABOUT_PATH}`}
+                        aria-label={`About ${APP_NAME} (${APP_CHANNEL})`}
+                        title={`${APP_NAME} · ${APP_CHANNEL}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <img
+                            src={studioMark}
+                            alt=""
+                            draggable={false}
+                        />
+                        <span className={styles.studioWordmark}>
+                            {APP_NAME}
+                            <span className={styles.studioChannel}>{APP_CHANNEL}</span>
+                        </span>
+                    </a>
                     <div className={styles.fileGroup}>
                         {this.props.errors.length > 0 && <div>
                             <MenuLabel
@@ -516,14 +535,14 @@ class MenuBar extends React.Component {
                                     place={this.props.isRtl ? 'left' : 'right'}
                                 >
                                     <MenuSection>
-                                        <MenuItemLink href="https://scratch.mit.edu/users/GarboMuffin/#comments">
+                                        <MenuItemLink href={`${process.env.ROOT}${APP_FEEDBACK_PATH}`}>
                                             <FormattedMessage
                                                 defaultMessage="Some scripts encountered errors."
                                                 description="Link in error menu"
                                                 id="tw.menuBar.reportError1"
                                             />
                                         </MenuItemLink>
-                                        <MenuItemLink href="https://scratch.mit.edu/users/GarboMuffin/#comments">
+                                        <MenuItemLink href={`${process.env.ROOT}${APP_FEEDBACK_PATH}`}>
                                             <FormattedMessage
                                                 defaultMessage="This is a bug. Please report it."
                                                 description="Link in error menu"
@@ -1011,27 +1030,6 @@ class MenuBar extends React.Component {
                             />
                         ) : []))}
                     </div>
-                    {/* tw: add a feedback button */}
-                    <div className={styles.menuBarItem}>
-                        <a
-                            className={styles.feedbackLink}
-                            href="https://scratch.mit.edu/users/GarboMuffin/#comments"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                        >
-                            {/* todo: icon */}
-                            <Button className={styles.feedbackButton}>
-                                <FormattedMessage
-                                    defaultMessage="{APP_NAME} Feedback"
-                                    description="Button to give feedback in the menu bar"
-                                    id="tw.feedbackButton"
-                                    values={{
-                                        APP_NAME
-                                    }}
-                                />
-                            </Button>
-                        </a>
-                    </div>
                 </div>
 
                 <div className={styles.accountInfoGroup}>
@@ -1047,7 +1045,7 @@ class MenuBar extends React.Component {
         return (
             <React.Fragment>
                 {menuBar}
-                <TWNews />
+                {SHOW_UPSTREAM_NEWS && <TWNews />}
             </React.Fragment>
         );
     }
