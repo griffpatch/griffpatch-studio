@@ -148,7 +148,7 @@ const Credits = () => (
                 Editor preferences and some session data are stored in this browser.
                 Online features can still contact Scratch, TurboWarp and other services using inherited configurations.
                 This does not mean every feature works offline or keeps all data on this device.
-                The hosted staging preview uses Cloudflare, which receives request information to serve and protect it.
+                The hosted preview uses Cloudflare, which receives request information to serve and protect it.
             </p>
             <p>
                 The <a href="https://turbowarp.org/privacy.html">TurboWarp service privacy policy</a> describes

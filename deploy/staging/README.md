@@ -1,8 +1,10 @@
 # Cloudflare staging
 
-Static assets only, on `griffpatch-studio-staging.griffpatch.workers.dev`.
-No custom-domain route, Worker request handler, database, analytics binding or
-paid caching product is configured. Workers observability is disabled.
+Static assets only, on `studio.griffpatch.academy` and the retained
+`griffpatch-studio-staging.griffpatch.workers.dev` address. The custom-domain
+route is source-controlled in `wrangler.jsonc`; Cloudflare manages its DNS and
+TLS certificate. No Worker request handler, database, analytics binding or paid
+caching product is configured. Workers observability is disabled.
 
 Build using the repository README (including modified Blocks), then copy
 `deploy/staging/_headers`, `deploy/staging/_redirects` and
@@ -24,10 +26,11 @@ there is no previous version to roll back to. Do not delete unrelated Workers.
 
 The staging address is **public, not password protected**. The noindex header and
 robots.txt discourage indexing; they are not access control. Use disposable test
-projects and do not announce it as the production service. Existing Academy DNS,
-Workers and cookies are not changed. Hosting on workers.dev also keeps Academy
-parent-domain cookies out of these staging requests. Final-domain cookie and
-privacy checks still need to happen before launch.
+projects and do not announce it as the production service. The custom domain
+creates one Studio DNS record and certificate. The Academy apex currently sets a
+Cloudflare security cookie scoped to griffpatch.academy; browsers may therefore
+send it to the Studio subdomain. The application does not read it. The workers.dev
+address remains useful for isolated comparison.
 
 Cloudflare receives request metadata to serve and protect the site. Disabling
 application observability does not disable Cloudflare's infrastructure/security

@@ -5,6 +5,12 @@
   "preview_urls": false,
   "send_metrics": false,
   "observability": {"enabled": false},
+  "routes": [
+    {
+      "pattern": "studio.griffpatch.academy",
+      "custom_domain": true
+    }
+  ],
   "assets": {
     "directory": "../../build",
     "html_handling": "none",

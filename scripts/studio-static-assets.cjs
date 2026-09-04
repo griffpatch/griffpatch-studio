@@ -14,7 +14,7 @@ module.exports = (content, absolutePath) => {
 <title>Privacy information - ${APP_TITLE}</title>
 <style>body{font:16px/1.6 system-ui,sans-serif;max-width:42rem;margin:4rem auto;padding:0 1.5rem;color-scheme:light dark}</style>
 </head><body><h1>Preview privacy information</h1>
-<p>This is ${APP_TITLE}, not the TurboWarp service. A public-release privacy policy for this fork is not yet complete.</p>
+<p>This is ${APP_TITLE}, not the TurboWarp service. This page describes the main data flows in the hosted experimental preview.</p>
 <p>Operated by <strong>Griffpatch Ltd</strong>, company number 13965954.
 Registered office: Atrium, York Eco Business Centre, Amy Johnson Way, York, United Kingdom, YO30 4AG.
 For privacy, security or other private matters: <a href="mailto:studio@griffpatch.academy">studio@griffpatch.academy</a>.</p>
@@ -33,16 +33,16 @@ Do not put private information into cloud variables or untrusted projects/extens
 <p>Preferences and help acknowledgement use localStorage. Backpack and project recovery use
 IndexedDB. Recovery copies are not a substitute for saving your work. This code disables the
 Scratch analytics adapter; upstream Windchimes telemetry is off unless explicitly enabled at build time.</p>
-<h2>Hosted staging preview</h2>
-<p>The staging preview is hosted by Cloudflare on a workers.dev address. Cloudflare receives
+<h2>Hosting</h2>
+<p>The preview is hosted by Cloudflare at studio.griffpatch.academy, with a separate workers.dev staging address. Cloudflare receives
 connection and request information, such as IP addresses and requested URLs, to serve and protect the site.
-Studio does not enable application request logs or add analytics to this staging deployment;
+Cloudflare may set security cookies on griffpatch.academy and its subdomains. Studio does not enable application request logs or add analytics to this deployment;
 this does not mean Cloudflare performs no infrastructure or security logging.
-The staging address is publicly accessible, not password protected. Use non-sensitive test projects.</p>
-<h2>Before public launch</h2>
-<p>The intended site is studio.griffpatch.academy, using Cloudflare static hosting. Hosting log retention,
-support-email handling, legal bases, recipients and rights information must be completed before release.
-This page is a description of the current preview, not a completed public privacy policy.</p>
+The site is publicly accessible, not password protected. Use non-sensitive test projects.</p>
+<h2>Your choices and contact</h2>
+<p>You can use the editor without creating a Griffpatch Studio account, clear its browser storage, avoid optional online features and save projects locally.
+For questions about information handled directly by Griffpatch Ltd, or to exercise applicable data-protection rights, email
+<a href="mailto:studio@griffpatch.academy">studio@griffpatch.academy</a>. Requests handled by an external service are also subject to that provider's privacy information.</p>
 <p><a href="${APP_PRIVACY_PATH}">Read the current preview privacy and service information</a>.</p>
 <p>The <a href="https://turbowarp.org/privacy.html">TurboWarp privacy policy</a> describes the upstream service, not this fork.</p>
 </body></html>`;

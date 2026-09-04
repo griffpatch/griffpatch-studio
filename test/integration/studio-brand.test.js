@@ -36,7 +36,7 @@ describeBrowser('Griffpatch Studio preview branding', () => {
         expect(notice).toContain('Grand9K Pixel');
         await driver.get(new URL('privacy.html', process.env.STUDIO_BROWSER_URL).href);
         expect(await driver.findElement(By.css('body')).getText()).toContain('Griffpatch Ltd');
-        expect(await driver.findElement(By.css('body')).getText()).toContain('not a completed public privacy policy');
+        expect(await driver.findElement(By.css('body')).getText()).toContain('Your choices and contact');
     });
 
     test.each(['light', 'dark'])('%s logo outline matches across banner, splash and credits', async theme => {
@@ -87,7 +87,7 @@ describeBrowser('Griffpatch Studio preview branding', () => {
         await screenshot(`advanced-identity-${theme}`);
         await driver.get(new URL('privacy.html', process.env.STUDIO_BROWSER_URL).href);
         expect(await driver.getTitle()).toContain(APP_NAME);
-        expect(await driver.findElement(By.css('body')).getText()).toContain('not yet complete');
+        expect(await driver.findElement(By.css('body')).getText()).toContain('studio.griffpatch.academy');
         expect(await driver.findElement(By.css('a[href="credits.html#preview-privacy"]')).isDisplayed()).toBe(true);
     });
 

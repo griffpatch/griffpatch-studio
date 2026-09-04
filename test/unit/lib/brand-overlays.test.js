@@ -41,11 +41,11 @@ test('static overlay replaces only the served policy and manifest, preserving ot
     expect(staticAsset(input, '/static/brand/griffpatch-studio.svg')).toBe(input);
     const notice = staticAsset(input, '/static/privacy.html');
     expect(notice).toContain(APP_NAME);
-    expect(notice).toContain('not yet complete');
+    expect(notice).toContain('studio.griffpatch.academy');
     expect(notice).toContain('credits.html#preview-privacy');
     expect(notice).toContain('IndexedDB');
     expect(notice).toContain('some trusted extensions run without a sandbox');
-    expect(notice).toContain('not a completed public privacy policy');
+    expect(notice).toContain('Your choices and contact');
     expect(notice).not.toContain('The TurboWarp project respects your privacy');
     expect(JSON.parse(staticAsset(Buffer.from('{"icons":[]}'), '/static/manifest.webmanifest')))
         .toMatchObject({short_name: APP_NAME, icons: []});
