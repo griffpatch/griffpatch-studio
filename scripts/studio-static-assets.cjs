@@ -33,6 +33,12 @@ Do not put private information into cloud variables or untrusted projects/extens
 <p>Preferences and help acknowledgement use localStorage. Backpack and project recovery use
 IndexedDB. Recovery copies are not a substitute for saving your work. This code disables the
 Scratch analytics adapter; upstream Windchimes telemetry is off unless explicitly enabled at build time.</p>
+<h2>Hosted staging preview</h2>
+<p>The staging preview is hosted by Cloudflare on a workers.dev address. Cloudflare receives
+connection and request information, such as IP addresses and requested URLs, to serve and protect the site.
+Studio does not enable application request logs or add analytics to this staging deployment;
+this does not mean Cloudflare performs no infrastructure or security logging.
+The staging address is publicly accessible, not password protected. Use non-sensitive test projects.</p>
 <h2>Before public launch</h2>
 <p>The intended site is studio.griffpatch.academy, using Cloudflare static hosting. Hosting log retention,
 support-email handling, legal bases, recipients and rights information must be completed before release.

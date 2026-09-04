@@ -100,7 +100,7 @@ const Credits = () => (
                 </li>
             </ul>
             <p>
-                These ideas are still evolving. This local preview is not a public release;
+                These ideas are still evolving. This experimental preview is not a production release;
                 keep a saved copy of any project you want to keep.
             </p>
         </section>
@@ -144,10 +144,11 @@ const Credits = () => (
         <section id="preview-privacy">
             <h2>Preview privacy information</h2>
             <p>
-                This is a local development preview, not a completed privacy policy.
+                This is an experimental preview, not a completed privacy policy.
                 Editor preferences and some session data are stored in this browser.
                 Online features can still contact Scratch, TurboWarp and other services using inherited configurations.
-                Local hosting does not mean every feature works offline or keeps all data on this device.
+                This does not mean every feature works offline or keeps all data on this device.
+                The hosted staging preview uses Cloudflare, which receives request information to serve and protect it.
             </p>
             <p>
                 The <a href="https://turbowarp.org/privacy.html">TurboWarp service privacy policy</a> describes

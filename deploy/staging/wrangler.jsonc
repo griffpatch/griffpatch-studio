@@ -1,0 +1,13 @@
+{
+  "name": "griffpatch-studio-staging",
+  "compatibility_date": "2026-09-04",
+  "workers_dev": true,
+  "preview_urls": false,
+  "send_metrics": false,
+  "observability": {"enabled": false},
+  "assets": {
+    "directory": "../../build",
+    "html_handling": "none",
+    "not_found_handling": "none"
+  }
+}
