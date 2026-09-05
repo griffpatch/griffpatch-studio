@@ -6274,7 +6274,35 @@ describeBrowser('Experimental keyboard authoring in the real Scratch editor', ()
         expect((await state()).roots[0].inputs.STEPS.type).toBe('operator_divide');
     }, 90000);
 
-    test('reveals the caret immediately when keyboard mode resumes after a native workspace pan', async () => {
+    test('keyboard activation retains a visible input and creates a visible free caret after panning away', async () => {
+        await typeBlock('move 10 steps', 1);
+        await keys(Key.HOME, Key.ARROW_RIGHT);
+        const original = (await state()).caret;
+        const camera = () => driver.executeScript(`const ws=window.__keyboardTestWorkspace;
+            return {x:ws.scrollX,y:ws.scrollY};`);
+        const before = await camera();
+        await chord(Key.ALT, 'k');
+        await chord(Key.ALT, 'k');
+        expect((await state()).caret).toEqual(original);
+        expect(await camera()).toEqual(before);
+        await chord(Key.ALT, 'k');
+        await driver.actions().scroll(850, 400, 0, 3500).perform();
+        await painted();
+        const panned = await camera();
+        expect(panned).not.toEqual(before);
+        await chord(Key.ALT, 'k');
+        await driver.wait(async () => (await state()).caret.startsWith('workspace:'), 10000);
+        await painted();
+        expect(await camera()).toEqual(panned);
+        expect(await driver.executeScript(`const c=document.querySelector('[data-position]').getBoundingClientRect();
+            const s=window.__keyboardTestWorkspace.getParentSvg().getBoundingClientRect();
+            return c.width>0 && c.left>=s.left && c.right<=s.right && c.top>=s.top && c.bottom<=s.bottom;`)).toBe(true);
+        await chord(Key.CONTROL, Key.ARROW_LEFT);
+        await driver.wait(async () => (await state()).caret === original, 10000);
+        await count(1);
+    }, 60000);
+
+    test('resumes keyboard mode in the visible script without scrolling after a native workspace pan', async () => {
         await typeBlock('move 10 steps', 1);
         for (let index = 0; index < 20; index++) await typeBlock('wait 1 seconds', index + 2);
         const before = (await state()).roots;
@@ -6288,6 +6316,8 @@ describeBrowser('Experimental keyboard authoring in the real Scratch editor', ()
             const svg=ws.getParentSvg().getBoundingClientRect();
             return selected.top > svg.bottom;`);
         expect(outside).toBe(true);
+        const camera = await driver.executeScript(`const ws=window.__keyboardTestWorkspace;
+            return {x:ws.scrollX,y:ws.scrollY};`);
         await driver.executeScript(`window.addEventListener('click', () => requestAnimationFrame(() => {
             const ws=window.__keyboardTestWorkspace;
             const caret=document.querySelector('[data-position]').getBoundingClientRect();
@@ -6303,6 +6333,8 @@ describeBrowser('Experimental keyboard authoring in the real Scratch editor', ()
         expect(box.right).toBeLessThanOrEqual(box.maxX);
         expect(box.top).toBeGreaterThanOrEqual(box.minY);
         expect(box.bottom).toBeLessThanOrEqual(box.maxY);
+        expect(await driver.executeScript(`const ws=window.__keyboardTestWorkspace;
+            return {x:ws.scrollX,y:ws.scrollY};`)).toEqual(camera);
         expect((await state()).roots).toEqual(before);
     }, 90000);
 

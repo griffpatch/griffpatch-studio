@@ -15,6 +15,7 @@ import {animateScrollTo, initializeSmoothScrolling, scrollPosFromOffset} from
 import {detachedStackPosition, insertBlock, removeBlock, setInputValue, splitStack} from './operations';
 import {createDraftPreview} from './draft-preview';
 import {revealDelta, scriptFrameDelta, svgClientBounds} from './viewport';
+import {activationPosition} from './activation-position';
 import {completeText, expressionContinuationQuery, isCompactNegativeNumber, numericContinuationPrefix,
     valueContinuationQuery} from './text-completion';
 import {compositionLayout} from './composition-layout';
@@ -436,7 +437,10 @@ const attachKeyboardAuthoring = ({workspace, ScratchBlocks, vm, session, isVisib
         }
     };
     const setEnabled = (value, {reveal = true, preserveNavigation = false, focus = true,
-        preservePreference = false} = {}) => {
+        preservePreference = false, currentView = false} = {}) => {
+        if (enabled && !value && !preservePreference && !preserveNavigation) {
+            sharedHistory.departure(sharedHistory.capture());
+        }
         focusReturn.cancel();
         if (!preservePreference) caretMemory.enabled = value;
         navigationSession.cancel();
@@ -460,9 +464,32 @@ const attachKeyboardAuthoring = ({workspace, ScratchBlocks, vm, session, isVisib
             // to the VM target which actually owns this visible workspace.
             targetId = vm.editingTarget && vm.editingTarget.id;
             const nativeSelected = ScratchBlocks.selected;
-            position = nativeSelected && nativeSelected.workspace === workspace ?
-                {kind: 'block', blockId: nativeSelected.id} :
-                position || navigationStops(workspace)[0] || freshPosition();
+            const nativePosition = nativeSelected && nativeSelected.workspace === workspace ?
+                {kind: 'block', blockId: nativeSelected.id} : null;
+            if (currentView) {
+                const previous = canonicalPosition(workspace, position);
+                const bounds = visibleBounds();
+                position = activationPosition({previous,
+                    selected: nativePosition,
+                    bounds,
+                    measure: at => geometry(at, element => svgClientBounds(element, workspace.getCanvas())),
+                    candidates: () => workspace.getAllBlocks(false).filter(block => !block.isShadow() &&
+                        !block.isInsertionMarker?.())
+                        .map(block => ({
+                            position: {kind: 'block', blockId: block.id}, head: !block.getParent()
+                        })),
+                    empty: () => {
+                        const point = workspacePoint(bounds.left + 36, bounds.top + 54);
+                        return {kind: 'workspace', x: point.x, y: point.y};
+                    }});
+                navigationDirty = true;
+                const block = position.blockId && workspace.getBlockById(position.blockId);
+                if (block && !block.isShadow()) block.select();
+                scriptContext.set(targetId, {...position, rootId: block?.getRootBlock().id});
+                if (JSON.stringify(previous) !== JSON.stringify(position)) {
+                    sharedHistory.append(sharedHistory.capture());
+                }
+            } else position = nativePosition || position || navigationStops(workspace)[0] || freshPosition();
             if (focus) focusSurface();
             if (reveal) ensureVisible();
             announce('Left/right explore inputs and bodies; up/down visit statements. ' +
@@ -487,7 +514,7 @@ const attachKeyboardAuthoring = ({workspace, ScratchBlocks, vm, session, isVisib
     badge.addEventListener('click', () => keyboardHelp.open());
     const enableWhenReady = options => ensureIconLabels().then(() => {
         if (!detached) {
-            setEnabled(true, options);
+            setEnabled(true, {currentView: true, reveal: false, ...options});
             keyboardHelp.open(true);
         }
     });
